@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="ml" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ഇന്ത്യാ പ്രാർത്ഥന — അഡ്മിൻ കൺട്രോൾ പാനൽ | Admin Security Portal</title>
+  <meta name="robots" content="noindex, nofollow" />
+  
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              500: '#f59e0b',
+              600: '#d97706',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Inter', 'Noto Sans Malayalam', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(245, 158, 11, 0.4);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- ========================================== -->
+  <!-- 1. ADMIN SECURE LOGIN SCREEN (WHEN LOCKED) -->
+  <!-- ========================================== -->
+  <div id="adminLoginScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-md">
+    <div class="max-w-md w-full bg-slate-900 border border-amber-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-2xl shadow-inner">
+          🔐
+        </div>
+        <div class="inline-block px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-[11px] font-bold text-amber-300 uppercase tracking-wider">
+          Admin Security Portal
+        </div>
+        <h1 class="text-xl sm:text-2xl font-extrabold text-white">
+          അഡ്മിൻ ലോഗിൻ (Admin Sign In)
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400">
+          സുരക്ഷിതമായ പാസ്‌വേഡ് നൽകി അഡ്മിൻ കൺട്രോൾ പാനൽ തുറക്കുക.
+        </p>
+      </div>
+
+      <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs text-slate-400 leading-relaxed">
+        🛡️ ഈ പേജ് സ്വകാര്യമാണ്. ഡിഫോൾട്ട് അഡ്മിൻ യൂസർനേം: <strong class="text-amber-300 font-mono">admin</strong> | പാസ്‌വേഡ്: <strong class="text-amber-300 font-mono">IndiaPrayer@2026</strong>. അകത്ത് കടന്ന ശേഷം പാസ്‌വേഡ് മാറ്റാവുന്നതാണ്.
+      </div>
+
+      <form id="adminLoginForm" class="space-y-4">
+        <div>
+          <label for="adminUsernameInput" class="block text-xs font-semibold text-slate-300 mb-1">
+            യൂസർനേം / ഇമെയിൽ (Username)
+          </label>
+          <input 
+            type="text" 
+            id="adminUsernameInput" 
+            required 
+            placeholder="admin" 
+            value="admin"
+            class="w-full py-2.5 px-3.5 text-sm rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono" 
+          />
+        </div>
+
+        <div>
+          <label for="adminPasswordInput" class="block text-xs font-semibold text-slate-300 mb-1 flex justify-between">
+            <span>അഡ്മിൻ പാസ്‌വേഡ് (Password)</span>
+            <span id="lockoutTimer" class="text-rose-400 text-[11px] font-bold hidden">Lockout active</span>
+          </label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="adminPasswordInput" 
+              required 
+              placeholder="••••••••••••" 
+              class="w-full py-2.5 px-3.5 text-sm rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 pr-10 font-mono" 
+            />
+            <button type="button" id="toggleAdminPwBtn" class="absolute inset-y-0 right-3 flex items-center text-slate-500 hover:text-slate-300 text-sm">
+              👁️
+            </button>
+          </div>
+          <p id="adminLoginError" class="text-xs text-rose-400 font-medium mt-1.5 hidden">
+            തെറ്റായ പാസ്‌വേഡ്! വീണ്ടും ശ്രമിക്കുക.
+          </p>
+        </div>
+
+        <button 
+          type="submit" 
+          id="adminLoginSubmitBtn"
+          class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2"
+        >
+          <span>അഡ്മിൻ ലോഗിൻ (Sign In)</span>
+          <span>🔓</span>
+        </button>
+      </form>
+
+      <div class="pt-2 border-t border-slate-800 text-center">
+        <a href="https://prayforindia.netlify.app" target="_blank" class="text-xs text-slate-400 hover:text-amber-300 transition">
+          ← പൊതു വെബ്‌സൈറ്റിലേക്ക് മടങ്ങുക (Back to Public Site)
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- 2. MAIN ADMIN PORTAL (SHOWN WHEN LOGGED IN) -->
+  <!-- ========================================== -->
+  <div id="adminPortalContainer" class="hidden flex-1 flex flex-col">
+    <header class="bg-slate-900 border-b border-amber-500/30 sticky top-0 z-40 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 font-black flex items-center justify-center text-lg shadow-md">
+            🇮🇳
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-bold text-sm sm:text-base text-white leading-tight">
+                ഇന്ത്യാ പ്രാർത്ഥന — അഡ്മിൻ കൺട്രോൾ
+              </h1>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold border border-emerald-500/30">
+                ● Live Storage
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 hidden sm:block">
+              Secure Ministry Dashboard & Online Database
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2.5">
+          <a 
+            href="https://prayforindia.netlify.app" 
+            target="_blank" 
+            class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition flex items-center gap-1.5 border border-slate-700"
+          >
+            <span>🌐</span>
+            <span class="hidden sm:inline">പൊതു സൈറ്റ്</span>
+          </a>
+          <button 
+            type="button" 
+            id="lockDashboardBtn" 
+            class="px-3 py-1.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 text-rose-300 font-semibold text-xs transition flex items-center gap-1.5 border border-rose-800/60"
+          >
+            <span>🔒</span>
+            <span>ലോഗ് ഔട്ട് (Logout)</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sub-Navbar Navigation Tabs -->
+    <div class="bg-slate-900/60 border-b border-slate-800 sticky top-16 z-30 backdrop-blur">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-2 py-2 overflow-x-auto custom-scroll">
+          <button type="button" data-subtab="requests" class="admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 bg-amber-500 text-slate-950 shadow-md">
+            <span>💌</span>
+            <span>പ്രാർത്ഥനാ അപേക്ഷകൾ</span>
+            <span id="badgeReqCount" class="ml-1 px-1.5 py-0.2 rounded-full bg-slate-950 text-amber-300 text-[11px] font-mono">0</span>
+          </button>
+          <button type="button" data-subtab="users" class="admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
+            <span>👥</span>
+            <span>പ്രാർത്ഥനാ പങ്കാളികൾ</span>
+            <span id="badgeUserCount" class="ml-1 px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 text-[11px] font-mono">0</span>
+          </button>
+          <button type="button" data-subtab="password" class="admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
+            <span>🔐</span>
+            <span>അഡ്മിൻ പാസ്‌വേഡ് മാറ്റുക</span>
+          </button>
+          <button type="button" data-subtab="backup" class="admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
+            <span>☁️</span>
+            <span>ഓൺലൈൻ ഡാറ്റാബേസ് & ബാക്കപ്പ്</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+      <!-- Metrics -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
+          <div class="text-xs text-slate-400 font-medium">ആകെ അപേക്ഷകൾ</div>
+          <div class="flex items-baseline gap-2">
+            <span id="kpiTotalReq" class="text-2xl font-black text-white font-mono">0</span>
+            <span class="text-xs text-rose-400 font-semibold" id="kpiPendingCount">0 pending</span>
+          </div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
+          <div class="text-xs text-slate-400 font-medium">പ്രാർത്ഥനയിൽ ഉള്ളവ</div>
+          <div class="flex items-baseline gap-2">
+            <span id="kpiInPrayerCount" class="text-2xl font-black text-amber-400 font-mono">0</span>
+            <span class="text-xs text-emerald-400 font-semibold" id="kpiAnsweredCount">0 answered</span>
+          </div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
+          <div class="text-xs text-slate-400 font-medium">രജിസ്റ്റർ ചെയ്ത പങ്കാളികൾ</div>
+          <div class="flex items-baseline gap-2">
+            <span id="kpiTotalUsers" class="text-2xl font-black text-indigo-400 font-mono">0</span>
+            <span class="text-xs text-slate-400">Partners</span>
+          </div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
+          <div class="text-xs text-slate-400 font-medium">സിങ്ക് അവസ്ഥ</div>
+          <div class="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold mt-1">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>തത്സമയം സിങ്ക് ചെയ്യുന്നു</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 1: REQUESTS -->
+      <section id="panelRequests" class="admin-panel space-y-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+          <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+            <div class="relative flex-1">
+              <span class="absolute inset-y-0 left-3 flex items-center text-slate-500 pointer-events-none">🔍</span>
+              <input 
+                type="text" 
+                id="reqSearchInput" 
+                placeholder="പേര്, ഫോൺ നമ്പർ, സ്ഥലം, വിഷയം തിരയുക..." 
+                class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+            <div class="flex items-center gap-2">
+              <select id="reqCategoryFilter" class="px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs sm:text-sm text-slate-200">
+                <option value="all">എല്ലാ വിഭാഗങ്ങളും</option>
+                <option value="Health">ആരോഗ്യം (Health)</option>
+                <option value="Family">കുടുംബം (Family)</option>
+                <option value="Persecution">സമാധാനം (Peace)</option>
+                <option value="Missions">ശുശ്രൂഷകൾ (Missions)</option>
+                <option value="Other">മറ്റുള്ളവ (Other)</option>
+              </select>
+              <button type="button" id="exportReqCsvBtn" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shadow">
+                <span>📥</span>
+                <span>Export CSV</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 pt-2 border-t border-slate-800 text-xs overflow-x-auto">
+            <span class="text-slate-400 font-semibold shrink-0">ഫിൽട്ടർ:</span>
+            <button type="button" data-status-filter="all" class="req-status-pill px-3 py-1 rounded-lg font-bold bg-amber-500 text-slate-950">എല്ലാം</button>
+            <button type="button" data-status-filter="pending" class="req-status-pill px-3 py-1 rounded-lg font-semibold bg-slate-800 text-slate-300 hover:text-white">പുതിയത്</button>
+            <button type="button" data-status-filter="in_prayer" class="req-status-pill px-3 py-1 rounded-lg font-semibold bg-slate-800 text-slate-300 hover:text-white">പ്രാർത്ഥനയിൽ</button>
+            <button type="button" data-status-filter="answered" class="req-status-pill px-3 py-1 rounded-lg font-semibold bg-slate-800 text-slate-300 hover:text-white">ഉത്തരം ലഭിച്ചത്</button>
+          </div>
+        </div>
+
+        <div id="requestsListContainer" class="space-y-3"></div>
+      </section>
+
+      <!-- TAB 2: USERS -->
+      <section id="panelUsers" class="admin-panel hidden space-y-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+          <div class="relative flex-1">
+            <span class="absolute inset-y-0 left-3 flex items-center text-slate-500 pointer-events-none">🔍</span>
+            <input 
+              type="text" 
+              id="userSearchInput" 
+              placeholder="പങ്കാളിയുടെ പേര്, ഫോൺ നമ്പർ, സ്ഥലം തിരയുക..." 
+              class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+            />
+          </div>
+          <button type="button" id="exportUsersCsvBtn" class="px-3.5 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shadow">
+            <span>📥</span>
+            <span>Export Partners CSV</span>
+          </button>
+        </div>
+        <div id="usersListContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
+      </section>
+
+      <!-- TAB 3: CHANGE ADMIN PASSWORD (KEY REQUIREMENT) -->
+      <section id="panelPassword" class="admin-panel hidden space-y-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl max-w-xl mx-auto space-y-5">
+          <div class="border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">🔐</span>
+              <h3 class="font-extrabold text-base sm:text-lg text-white">
+                അഡ്മിൻ പാസ്‌വേഡ് മാറ്റുക (Change Admin Password)
+              </h3>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              അഡ്മിൻ കൺട്രോൾ പാനലിലേക്ക് സുരക്ഷിതമായി ലോഗിൻ ചെയ്യാൻ പുതിയ പാസ്‌വേഡ് ഇവിടെ മാറ്റാം.
+            </p>
+          </div>
+
+          <form id="changeAdminPasswordForm" class="space-y-4">
+            <div>
+              <label for="currentAdminPw" class="block text-xs font-semibold text-slate-300 mb-1">
+                ഇപ്പോഴത്തെ അഡ്മിൻ പാസ്‌വേഡ് (Current Password) *
+              </label>
+              <input 
+                type="password" 
+                id="currentAdminPw" 
+                required 
+                placeholder="Enter current password (Default: IndiaPrayer@2026)" 
+                class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white font-mono focus:outline-none focus:ring-2 focus:ring-amber-500" 
+              />
+            </div>
+
+            <div>
+              <label for="newAdminPw" class="block text-xs font-semibold text-slate-300 mb-1 flex justify-between">
+                <span>പുതിയ അഡ്മിൻ പാസ്‌വേഡ് (New Password) *</span>
+                <span id="adminStrengthLabel" class="text-[11px] font-bold text-slate-500">Min 8 characters</span>
+              </label>
+              <input 
+                type="password" 
+                id="newAdminPw" 
+                minlength="8" 
+                required 
+                placeholder="Enter strong new password" 
+                class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white font-mono focus:outline-none focus:ring-2 focus:ring-amber-500" 
+              />
+              <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div id="adminStrengthBar" class="h-full bg-rose-500 w-0 transition-all duration-300"></div>
+              </div>
+            </div>
+
+            <div>
+              <label for="confirmNewAdminPw" class="block text-xs font-semibold text-slate-300 mb-1">
+                പുതിയ പാസ്‌വേഡ് സ്ഥിരീകരിക്കുക (Confirm New Password) *
+              </label>
+              <input 
+                type="password" 
+                id="confirmNewAdminPw" 
+                minlength="8" 
+                required 
+                placeholder="Confirm new password" 
+                class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white font-mono focus:outline-none focus:ring-2 focus:ring-amber-500" 
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              class="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-sm shadow transition"
+            >
+              💾 അഡ്മിൻ പാസ്‌വേഡ് സേവ് ചെയ്യുക (Update Admin Password)
+            </button>
+          </form>
+
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400 leading-relaxed space-y-1">
+            <span class="font-bold text-amber-300">🛡️ സുരക്ഷാ നുറുങ്ങ് (Security Tip):</span>
+            <p>പുതിയ പാസ്‌വേഡ് വെബ് ബ്രൗസറിൽ സുരക്ഷിതമായി എൻക്രിപ്റ്റ് ചെയ്ത് (Salted SHA-256) സൂക്ഷിക്കുന്നു. പാസ്‌വേഡ് മാറ്റിയാൽ പുതിയ പാസ്‌വേഡ് ഉപയോഗിച്ച് മാത്രമേ അടുത്ത തവണ ലോഗിൻ ചെയ്യാൻ സാധിക്കൂ.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: ONLINE DATABASE & BACKUP -->
+      <section id="panelBackup" class="admin-panel hidden space-y-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
+          <div class="border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">☁️</span>
+              <h3 class="font-extrabold text-base sm:text-lg text-white">
+                ഓൺലൈൻ ഡാറ്റാബേസ് & ബാക്കപ്പ് ഹബ് (Online Database Hub)
+              </h3>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              നിങ്ങളുടെ ഉപകരണത്തിലും ക്ലൗഡിലും ഡാറ്റ സുരക്ഷിതമായി സൂക്ഷിക്കുക.
+            </p>
+          </div>
+
+          <!-- Cloud Database Config -->
+          <div class="bg-slate-950 border border-amber-500/30 rounded-2xl p-5 space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🌐</span>
+              <h4 class="font-bold text-sm text-white">ക്ലൗഡ് ഡാറ്റാബേസ് കണക്ഷൻ (Firebase / Supabase Integration)</h4>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              വെബ്‌സൈറ്റിലെ പ്രാർത്ഥനാ അപേക്ഷകളും ഉപയോക്താക്കളുടെ പാസ്‌വേഡുകളും തത്സമയം ഓൺലൈൻ ക്ലൗഡ് ഡാറ്റാബേസിൽ സൂക്ഷിക്കാൻ സൌജന്യ <strong>Firebase Firestore</strong> അല്ലെങ്കിൽ <strong>Supabase</strong> കണക്റ്റ് ചെയ്യാം.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-400 mb-1">Firebase Project ID / Supabase URL</label>
+                <input type="text" id="cloudDbUrl" placeholder="https://xyz.supabase.co" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-400 mb-1">Public API Key (Anon Key)</label>
+                <input type="password" id="cloudDbKey" placeholder="eyJhbGciOi..." class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+              </div>
+            </div>
+            <button type="button" id="saveCloudDbBtn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs border border-amber-500/40 transition">
+              💾 ക്ലൗഡ് ക്രമീകരണങ്ങൾ സൂക്ഷിക്കുക (Save Cloud Config)
+            </button>
+          </div>
+
+          <!-- Backup Download / Restore -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-3">
+              <h4 class="font-bold text-sm text-white flex items-center gap-1.5">
+                <span>📥</span> <span>മുഴുവൻ ബാക്കപ്പ് ഡൗൺലോഡ്</span>
+              </h4>
+              <p class="text-xs text-slate-400">
+                എല്ലാ പ്രാർത്ഥനാ അപേക്ഷകളും പങ്കാളികളുടെ ഡാറ്റയും ഉൾക്കൊള്ളുന്ന സുരക്ഷിത JSON ഫയൽ ഡൗൺലോഡ് ചെയ്യുക.
+              </p>
+              <button type="button" id="downloadJsonBackupBtn" class="w-full py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow transition">
+                💾 Download Full JSON Backup
+              </button>
+            </div>
+
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-3">
+              <h4 class="font-bold text-sm text-white flex items-center gap-1.5">
+                <span>📂</span> <span>ബാക്കപ്പ് റീസ്റ്റോർ ചെയ്യുക</span>
+              </h4>
+              <p class="text-xs text-slate-400">
+                നേരത്തെ സൂക്ഷിച്ച JSON ബാക്കപ്പ് ഫയൽ അപ്‌ലോഡ് ചെയ്ത് വിവരങ്ങൾ പുനഃസ്ഥാപിക്കുക.
+              </p>
+              <label class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs shadow transition flex items-center justify-center gap-2 cursor-pointer border border-slate-700">
+                <span>📁 JSON ഫയൽ തിരഞ്ഞെടുക്കുക</span>
+                <input type="file" id="restoreJsonInput" accept=".json" class="hidden" />
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div id="deleteConfirmModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="max-w-sm w-full bg-slate-900 border border-rose-500/30 rounded-3xl p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-300 font-bold flex items-center justify-center text-lg">
+          ⚠️
+        </div>
+        <div>
+          <h3 class="font-bold text-sm text-white">സ്ഥിരീകരിക്കുക (Confirm)</h3>
+          <p id="deleteConfirmText" class="text-xs text-slate-400">ഈ ഇനം തീർച്ചയായും ഒഴിവാക്കണമോ?</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" id="cancelDeleteBtn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
+          റദ്ദാക്കുക (Cancel)
+        </button>
+        <button type="button" id="confirmDeleteBtn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow">
+          ഒഴിവാക്കുക (Delete)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 hidden max-w-sm rounded-xl bg-slate-900 text-white px-4 py-3 shadow-2xl border border-amber-400/50 flex items-center gap-2.5 text-xs sm:text-sm font-medium">
+    <span id="toastIcon">✨</span>
+    <span id="toastMessage">Done!</span>
+  </div>
+
+  <script>
+    // State Store
+    const state = {
+      isAdminLogged: false,
+      adminUsername: 'admin',
+      adminSalt: 'admin_salt_pray_india_2026',
+      adminPasswordHash: 'dcebab0df15ec0e5201e3db11456e64990d651813e7918534ee2f81248dd47be',
+      failedAttempts: 0,
+      lockedUntil: 0,
+      prayerRequests: [],
+      participants: [],
+      activeSubTab: 'requests',
+      reqSearchQuery: '',
+      reqStatusFilter: 'all',
+      reqCategoryFilter: 'all',
+      userSearchQuery: ''
+    };
+
+    const syncChannel = window.BroadcastChannel ? new BroadcastChannel('india_prayer_sync') : null;
+    let pendingDeleteCallback = null;
+
+    async function hashPassword(password, salt) {
+      if (window.crypto && window.crypto.subtle) {
+        try {
+          const enc = new TextEncoder();
+          const data = enc.encode(password + '::' + salt);
+          const buf = await crypto.subtle.digest('SHA-256', data);
+          return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        } catch(e) {}
+      }
+      let hash = 0;
+      const str = password + '::' + salt;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return 'hash_' + Math.abs(hash).toString(16);
+    }
+
+    function showToast(msg, icon = '✨') {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMessage').textContent = msg;
+      document.getElementById('toastIcon').textContent = icon;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    function openDeleteConfirmModal(message, callback) {
+      document.getElementById('deleteConfirmText').textContent = message;
+      pendingDeleteCallback = callback;
+      document.getElementById('deleteConfirmModal').classList.remove('hidden');
+    }
+
+    function closeDeleteConfirmModal() {
+      pendingDeleteCallback = null;
+      document.getElementById('deleteConfirmModal').classList.add('hidden');
+    }
+
+    function loadData() {
+      try {
+        const savedSalt = localStorage.getItem('india_admin_salt');
+        const savedHash = localStorage.getItem('india_admin_pw_hash');
+        if (savedSalt) state.adminSalt = savedSalt;
+        if (savedHash) state.adminPasswordHash = savedHash;
+
+        const savedReqs = localStorage.getItem('india_prayer_requests');
+        if (savedReqs) state.prayerRequests = JSON.parse(savedReqs);
+
+        const savedUsers = localStorage.getItem('india_prayer_participants');
+        if (savedUsers) state.participants = JSON.parse(savedUsers);
+
+        if (sessionStorage.getItem('india_admin_session') === 'true') {
+          state.isAdminLogged = true;
+        }
+
+        const cloudUrl = localStorage.getItem('india_cloud_db_url');
+        const cloudKey = localStorage.getItem('india_cloud_db_key');
+        if (cloudUrl && document.getElementById('cloudDbUrl')) {
+          document.getElementById('cloudDbUrl').value = cloudUrl;
+        }
+        if (cloudKey && document.getElementById('cloudDbKey')) {
+          document.getElementById('cloudDbKey').value = cloudKey;
+        }
+      } catch (e) {}
+    }
+
+    function saveData() {
+      try {
+        localStorage.setItem('india_admin_salt', state.adminSalt);
+        localStorage.setItem('india_admin_pw_hash', state.adminPasswordHash);
+        localStorage.setItem('india_prayer_requests', JSON.stringify(state.prayerRequests));
+        localStorage.setItem('india_prayer_participants', JSON.stringify(state.participants));
+        if (syncChannel) {
+          syncChannel.postMessage({ type: 'DATA_UPDATED_BY_ADMIN' });
+        }
+      } catch (e) {}
+    }
+
+    function updateMetrics() {
+      const totalReq = state.prayerRequests.length;
+      const pending = state.prayerRequests.filter(r => r.status === 'Pending' || r.status === 'pending').length;
+      const inPrayer = state.prayerRequests.filter(r => r.status === 'In Prayer' || r.status === 'in_prayer').length;
+      const answered = state.prayerRequests.filter(r => r.status === 'Answered' || r.status === 'answered').length;
+      const totalUsers = state.participants.length;
+
+      document.getElementById('kpiTotalReq').textContent = totalReq;
+      document.getElementById('kpiPendingCount').textContent = `${pending} pending`;
+      document.getElementById('kpiInPrayerCount').textContent = inPrayer;
+      document.getElementById('kpiAnsweredCount').textContent = `${answered} answered`;
+      document.getElementById('kpiTotalUsers').textContent = totalUsers;
+
+      document.getElementById('badgeReqCount').textContent = totalReq;
+      document.getElementById('badgeUserCount').textContent = totalUsers;
+    }
+
+    function renderRequests() {
+      const container = document.getElementById('requestsListContainer');
+      let filtered = [...state.prayerRequests];
+
+      if (state.reqStatusFilter !== 'all') {
+        filtered = filtered.filter(r => (r.status || '').toLowerCase() === state.reqStatusFilter.toLowerCase());
+      }
+
+      if (state.reqCategoryFilter !== 'all') {
+        filtered = filtered.filter(r => (typeof r.category === 'string' ? r.category : (r.category && r.category.en) || '').includes(state.reqCategoryFilter));
+      }
+
+      if (state.reqSearchQuery) {
+        const q = state.reqSearchQuery.toLowerCase();
+        filtered = filtered.filter(r => {
+          const hay = `${r.name || ''} ${r.mobile || ''} ${JSON.stringify(r.location || '')} ${JSON.stringify(r.category || '')} ${JSON.stringify(r.details || '')}`.toLowerCase();
+          return hay.includes(q);
+        });
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-2">
+            <span class="text-3xl">🕊️</span>
+            <h4 class="text-sm font-bold text-slate-300">പ്രാർത്ഥനാ അപേക്ഷകൾ ലഭ്യമല്ല</h4>
+            <p class="text-xs text-slate-500">ഈ ഫിൽട്ടറിന് അനുയോജ്യമായ അപേക്ഷകൾ ഒന്നും കണ്ടെത്തിയില്ല.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(r => {
+        const statusColors = {
+          'pending': 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+          'in_prayer': 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+          'answered': 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+        };
+        const sKey = (r.status || 'pending').toLowerCase().replace(' ', '_');
+        const cleanMobile = (r.mobile || '').replace(/[^0-9]/g, '');
+        const waLink = cleanMobile ? `https://wa.me/91${cleanMobile.slice(-10)}` : '#';
+
+        const loc = typeof r.location === 'object' ? (r.location.ml || r.location.en) : r.location;
+        const cat = typeof r.category === 'object' ? (r.category.ml || r.category.en) : r.category;
+        const det = typeof r.details === 'object' ? (r.details.ml || r.details.hi || r.details.en) : r.details;
+
+        return `
+          <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 sm:p-5 space-y-3.5 transition">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 font-extrabold flex items-center justify-center text-sm">
+                  ${escapeHtml((r.name || 'P')[0].toUpperCase())}
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm sm:text-base text-white">${escapeHtml(r.name)}</h4>
+                  <div class="flex flex-wrap items-center gap-2 text-xs text-slate-400 mt-0.5">
+                    <span>📍 ${escapeHtml(loc || 'India')}</span>
+                    <span>•</span>
+                    <span>📅 ${escapeHtml(r.date || 'Recently')}</span>
+                    ${r.private ? '<span class="px-2 py-0.2 rounded-md bg-rose-500/20 text-rose-300 text-[10px] font-bold">🔒 Private</span>' : ''}
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-700">${escapeHtml(cat || 'General')}</span>
+                <span class="px-2.5 py-0.5 rounded-full border text-xs font-bold ${statusColors[sKey] || statusColors.pending}">${escapeHtml(r.status || 'Pending')}</span>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
+              ${escapeHtml(det)}
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-400 font-mono">📞 ${escapeHtml(r.mobile || '—')}</span>
+                ${cleanMobile ? `
+                  <a href="${waLink}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1 transition">
+                    <span>💬 WhatsApp</span>
+                  </a>
+                  <a href="tel:${cleanMobile}" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1 transition">
+                    <span>📞 Call</span>
+                  </a>
+                ` : ''}
+              </div>
+
+              <div class="flex items-center gap-1.5">
+                <button type="button" data-action="set_pending" data-id="${escapeHtml(r.id)}" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition ${sKey === 'pending' ? 'bg-rose-500 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}">
+                  പുതിയത്
+                </button>
+                <button type="button" data-action="set_in_prayer" data-id="${escapeHtml(r.id)}" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition ${sKey === 'in_prayer' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-800 text-slate-400 hover:text-white'}">
+                  പ്രാർത്ഥനയിൽ
+                </button>
+                <button type="button" data-action="set_answered" data-id="${escapeHtml(r.id)}" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition ${sKey === 'answered' ? 'bg-emerald-500 text-slate-950 font-bold' : 'bg-slate-800 text-slate-400 hover:text-white'}">
+                  ഉത്തരം ലഭിച്ചു
+                </button>
+                <button type="button" data-action="delete_req" data-id="${escapeHtml(r.id)}" class="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 transition" title="Delete">
+                  🗑️
+                </button>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-800 flex items-center gap-2">
+              <input 
+                type="text" 
+                data-note-id="${escapeHtml(r.id)}" 
+                value="${escapeHtml(r.notes || '')}" 
+                placeholder="അഡ്മിൻ കുറിപ്പ് ചേർക്കുക (e.g. ഫോണിൽ വിളിച്ചു സംസാരിച്ചു)..." 
+                class="flex-1 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-amber-500" 
+              />
+              <button type="button" data-action="save_note" data-id="${escapeHtml(r.id)}" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
+                Save
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const action = btn.getAttribute('data-action');
+          const id = btn.getAttribute('data-id');
+          const req = state.prayerRequests.find(item => item.id === id);
+          if (!req) return;
+
+          if (action === 'set_pending') {
+            req.status = 'Pending';
+            saveData();
+            updateMetrics();
+            renderRequests();
+            showToast('Marked as Pending');
+          } else if (action === 'set_in_prayer') {
+            req.status = 'In Prayer';
+            saveData();
+            updateMetrics();
+            renderRequests();
+            showToast('Marked as In Prayer');
+          } else if (action === 'set_answered') {
+            req.status = 'Answered';
+            saveData();
+            updateMetrics();
+            renderRequests();
+            showToast('Marked as Answered Praise!');
+          } else if (action === 'delete_req') {
+            openDeleteConfirmModal('ഈ പ്രാർത്ഥനാ അപേക്ഷ തീർച്ചയായും ഒഴിവാക്കണമോ?', () => {
+              state.prayerRequests = state.prayerRequests.filter(item => item.id !== id);
+              saveData();
+              updateMetrics();
+              renderRequests();
+              showToast('അപേക്ഷ ഒഴിവാക്കി (Request deleted)');
+            });
+          } else if (action === 'save_note') {
+            const inp = container.querySelector(`[data-note-id="${id}"]`);
+            if (inp) {
+              req.notes = inp.value.trim();
+              saveData();
+              showToast('Pastoral note saved');
+            }
+          }
+        });
+      });
+    }
+
+    function renderUsers() {
+      const container = document.getElementById('usersListContainer');
+      let filtered = [...state.participants];
+
+      if (state.userSearchQuery) {
+        const q = state.userSearchQuery.toLowerCase();
+        filtered = filtered.filter(u => `${u.name || ''} ${u.mobile || ''} ${u.location || ''}`.toLowerCase().includes(q));
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-500 text-xs">
+            പങ്കാളികൾ ലഭ്യമല്ല.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(u => {
+        const cleanMobile = (u.mobile || '').replace(/[^0-9]/g, '');
+        const waLink = cleanMobile ? `https://wa.me/91${cleanMobile.slice(-10)}` : '#';
+
+        return `
+          <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 space-y-3 transition flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 font-extrabold flex items-center justify-center text-sm">
+                    ${escapeHtml((u.name || 'P')[0].toUpperCase())}
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-sm text-white">${escapeHtml(u.name)}</h4>
+                    <p class="text-xs text-slate-400 font-mono">${escapeHtml(u.mobile || '—')}</p>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-bold">
+                  🔑 Password Set
+                </span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-1">
+                <div class="flex justify-between text-slate-300">
+                  <span>📍 സ്ഥലം:</span>
+                  <span class="font-semibold text-white">${escapeHtml(u.location || 'India')}</span>
+                </div>
+                <div class="flex justify-between text-slate-300">
+                  <span>⏰ വാച്ച് സമയം:</span>
+                  <span class="font-semibold text-amber-300">${escapeHtml(u.slot || 'Daily')}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-800">
+              <div class="flex items-center gap-1.5">
+                ${cleanMobile ? `
+                  <a href="${waLink}" target="_blank" class="p-1.5 rounded-lg bg-emerald-600/20 text-emerald-300 text-xs font-semibold">💬 WhatsApp</a>
+                  <a href="tel:${cleanMobile}" class="p-1.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold">📞 Call</a>
+                ` : ''}
+              </div>
+              <button type="button" data-del-mobile="${escapeHtml(u.mobile)}" class="del-user-btn text-xs text-slate-500 hover:text-rose-400 transition">
+                നീക്കം ചെയ്യുക 🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.querySelectorAll('.del-user-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const mob = btn.getAttribute('data-del-mobile');
+          openDeleteConfirmModal(`ഈ പങ്കാളിയെ ഒഴിവാക്കണമോ? (${mob})`, () => {
+            state.participants = state.participants.filter(item => item.mobile !== mob);
+            saveData();
+            updateMetrics();
+            renderUsers();
+            showToast('പങ്കാളിയെ നീക്കം ചെയ്തു');
+          });
+        });
+      });
+    }
+
+    // CSV Exporters
+    function exportRequestsCsv() {
+      if (state.prayerRequests.length === 0) {
+        showToast('പ്രാർത്ഥനാ അപേക്ഷകൾ ലഭ്യമല്ല.', '⚠️');
+        return;
+      }
+      const headers = ['ID', 'Date', 'Name', 'Mobile', 'Location', 'Category', 'Status', 'Details', 'Notes'];
+      const rows = state.prayerRequests.map(r => [
+        r.id || '',
+        r.date || '',
+        `"${(r.name || '').replace(/"/g, '""')}"`,
+        `"${(r.mobile || '').replace(/"/g, '""')}"`,
+        `"${(typeof r.location === 'object' ? (r.location.en || '') : (r.location || '')).replace(/"/g, '""')}"`,
+        `"${(typeof r.category === 'object' ? (r.category.en || '') : (r.category || '')).replace(/"/g, '""')}"`,
+        r.status || 'Pending',
+        `"${(typeof r.details === 'object' ? (r.details.en || r.details.hi || r.details.ml || '') : (r.details || '')).replace(/"/g, '""')}"`,
+        `"${(r.notes || '').replace(/"/g, '""')}"`
+      ]);
+      const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      downloadBlob(csvContent, 'text/csv;charset=utf-8;', 'india_prayer_requests.csv');
+      showToast('Prayer Requests CSV ഡൗൺലോഡ് ചെയ്തു');
+    }
+
+    function exportUsersCsv() {
+      if (state.participants.length === 0) {
+        showToast('പങ്കാളികൾ ലഭ്യമല്ല.', '⚠️');
+        return;
+      }
+      const headers = ['Name', 'Mobile', 'Language', 'Location', 'Watch_Slot', 'Registered_At'];
+      const rows = state.participants.map(u => [
+        `"${(u.name || '').replace(/"/g, '""')}"`,
+        `"${(u.mobile || '').replace(/"/g, '""')}"`,
+        u.lang || 'ml',
+        `"${(u.location || '').replace(/"/g, '""')}"`,
+        `"${(u.slot || '').replace(/"/g, '""')}"`,
+        u.registeredAt || u.date || ''
+      ]);
+      const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      downloadBlob(csvContent, 'text/csv;charset=utf-8;', 'india_prayer_participants.csv');
+      showToast('Prayer Partners CSV ഡൗൺലോഡ് ചെയ്തു');
+    }
+
+    function downloadBlob(content, mimeType, filename) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function switchSubTab(tabName) {
+      state.activeSubTab = tabName;
+      document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-subtab') === tabName) {
+          btn.className = 'admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 bg-amber-500 text-slate-950 shadow-md';
+        } else {
+          btn.className = 'admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800';
+        }
+      });
+
+      document.querySelectorAll('.admin-panel').forEach(p => p.classList.add('hidden'));
+
+      if (tabName === 'requests') {
+        document.getElementById('panelRequests').classList.remove('hidden');
+        renderRequests();
+      } else if (tabName === 'users') {
+        document.getElementById('panelUsers').classList.remove('hidden');
+        renderUsers();
+      } else if (tabName === 'password') {
+        document.getElementById('panelPassword').classList.remove('hidden');
+      } else if (tabName === 'backup') {
+        document.getElementById('panelBackup').classList.remove('hidden');
+      }
+    }
+
+    // Toggle PW
+    document.getElementById('toggleAdminPwBtn').addEventListener('click', () => {
+      const inp = document.getElementById('adminPasswordInput');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    });
+
+    // Admin Login form
+    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (Date.now() < state.lockedUntil) {
+        showToast('താൽക്കാലികമായി ലോക്ക് ചെയ്തിരിക്കുന്നു. ദയവായി കുറച്ചുസമയം കാത്തിരിക്കുക.', '⚠️');
+        return;
+      }
+
+      const pw = document.getElementById('adminPasswordInput').value;
+      const enteredHash = await hashPassword(pw, state.adminSalt);
+
+      if (enteredHash === state.adminPasswordHash) {
+        state.isAdminLogged = true;
+        state.failedAttempts = 0;
+        sessionStorage.setItem('india_admin_session', 'true');
+        document.getElementById('adminLoginScreen').classList.add('hidden');
+        document.getElementById('adminPortalContainer').classList.remove('hidden');
+        updateMetrics();
+        renderRequests();
+        renderUsers();
+        showToast('അഡ്മിൻ പാനലിലേക്ക് സ്വാഗതം!', '🔓');
+      } else {
+        state.failedAttempts++;
+        if (state.failedAttempts >= 5) {
+          state.lockedUntil = Date.now() + 60000;
+          document.getElementById('lockoutTimer').classList.remove('hidden');
+          showToast('5 തവണ തെറ്റായ പാസ്‌വേഡ് നൽകി! 60 സെക്കൻഡ് ലോക്ക്ഔട്ട്.', '⚠️');
+        } else {
+          document.getElementById('adminLoginError').classList.remove('hidden');
+        }
+      }
+    });
+
+    // Logout
+    document.getElementById('lockDashboardBtn').addEventListener('click', () => {
+      state.isAdminLogged = false;
+      sessionStorage.removeItem('india_admin_session');
+      document.getElementById('adminLoginScreen').classList.remove('hidden');
+      document.getElementById('adminPortalContainer').classList.add('hidden');
+      document.getElementById('adminPasswordInput').value = '';
+    });
+
+    // Change Admin Password Form (KEY REQUIREMENT)
+    document.getElementById('changeAdminPasswordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const curPw = document.getElementById('currentAdminPw').value;
+      const newPw = document.getElementById('newAdminPw').value;
+      const confPw = document.getElementById('confirmNewAdminPw').value;
+
+      if (newPw !== confPw) {
+        showToast('പുതിയ പാസ്‌വേഡുകൾ തമ്മിൽ വ്യത്യാസമുണ്ട്.', '⚠️');
+        return;
+      }
+
+      const curHash = await hashPassword(curPw, state.adminSalt);
+      if (curHash !== state.adminPasswordHash) {
+        showToast('ഇപ്പോഴത്തെ അഡ്മിൻ പാസ്‌വേഡ് തെറ്റാണ്.', '⚠️');
+        return;
+      }
+
+      const newSalt = 'admin_salt_' + Date.now().toString(36);
+      const newHash = await hashPassword(newPw, newSalt);
+
+      state.adminSalt = newSalt;
+      state.adminPasswordHash = newHash;
+      saveData();
+
+      document.getElementById('changeAdminPasswordForm').reset();
+      showToast('അഡ്മിൻ പാസ്‌വേഡ് വിജയകരമായി മാറ്റി!', '🔐');
+    });
+
+    // Cloud DB Config Save
+    document.getElementById('saveCloudDbBtn').addEventListener('click', () => {
+      const url = document.getElementById('cloudDbUrl').value.trim();
+      const key = document.getElementById('cloudDbKey').value.trim();
+      localStorage.setItem('india_cloud_db_url', url);
+      localStorage.setItem('india_cloud_db_key', key);
+      showToast('ക്ലൗഡ് ക്രമീകരണങ്ങൾ സേവ് ചെയ്തു!', '☁️');
+    });
+
+    // JSON Backup
+    document.getElementById('downloadJsonBackupBtn').addEventListener('click', () => {
+      const backup = {
+        app: 'India Daily Prayer Admin',
+        backupDate: new Date().toISOString(),
+        prayerRequests: state.prayerRequests,
+        participants: state.participants
+      };
+      downloadBlob(JSON.stringify(backup, null, 2), 'application/json', `india_prayer_backup_${new Date().toISOString().slice(0,10)}.json`);
+      showToast('പൂർണ്ണ ബാക്കപ്പ് ഡൗൺലോഡ് ചെയ്തു');
+    });
+
+    // JSON Restore
+    document.getElementById('restoreJsonInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = (event) => {
+        try {
+          const d = JSON.parse(event.target.result);
+          if (d.prayerRequests) state.prayerRequests = d.prayerRequests;
+          if (d.participants) state.participants = d.participants;
+          saveData();
+          updateMetrics();
+          renderRequests();
+          renderUsers();
+          showToast('ബാക്കപ്പ് വിജയകരമായി റീസ്റ്റോർ ചെയ്തു!');
+        } catch(err) {
+          showToast('സാധുവായ JSON ഫയൽ തിരഞ്ഞെടുക്കുക.', '⚠️');
+        }
+      };
+      r.readAsText(file);
+    });
+
+    // In-page modal controls
+    document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteConfirmModal);
+    document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+      if (typeof pendingDeleteCallback === 'function') {
+        pendingDeleteCallback();
+      }
+      closeDeleteConfirmModal();
+    });
+
+    // Tab buttons
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchSubTab(btn.getAttribute('data-subtab')));
+    });
+
+    // Search and filter inputs
+    document.getElementById('reqSearchInput').addEventListener('input', (e) => {
+      state.reqSearchQuery = e.target.value.trim();
+      renderRequests();
+    });
+
+    document.getElementById('reqCategoryFilter').addEventListener('change', (e) => {
+      state.reqCategoryFilter = e.target.value;
+      renderRequests();
+    });
+
+    document.querySelectorAll('.req-status-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.reqStatusFilter = btn.getAttribute('data-status-filter');
+        document.querySelectorAll('.req-status-pill').forEach(b => {
+          if (b === btn) {
+            b.className = 'req-status-pill px-3 py-1 rounded-lg font-bold bg-amber-500 text-slate-950';
+          } else {
+            b.className = 'req-status-pill px-3 py-1 rounded-lg font-semibold bg-slate-800 text-slate-300 hover:text-white';
+          }
+        });
+        renderRequests();
+      });
+    });
+
+    document.getElementById('userSearchInput').addEventListener('input', (e) => {
+      state.userSearchQuery = e.target.value.trim();
+      renderUsers();
+    });
+
+    document.getElementById('exportReqCsvBtn').addEventListener('click', exportRequestsCsv);
+    document.getElementById('exportUsersCsvBtn').addEventListener('click', exportUsersCsv);
+
+    // Cross-tab sync
+    if (syncChannel) {
+      syncChannel.onmessage = () => {
+        loadData();
+        updateMetrics();
+        if (state.activeSubTab === 'requests') renderRequests();
+        if (state.activeSubTab === 'users') renderUsers();
+        showToast('പുതിയ ഡാറ്റ എത്തി (Synced)', '🔔');
+      };
+    }
+
+    // Init
+    loadData();
+    if (state.isAdminLogged) {
+      document.getElementById('adminLoginScreen').classList.add('hidden');
+      document.getElementById('adminPortalContainer').classList.remove('hidden');
+      updateMetrics();
+      renderRequests();
+      renderUsers();
+    }
+  </script>
+</body>
+</html>
