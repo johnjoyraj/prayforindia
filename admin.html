@@ -1,1104 +1,758 @@
 <!DOCTYPE html>
-<html lang="ml" class="h-full bg-slate-950 text-slate-100">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ഇന്ത്യാ പ്രാർത്ഥന — അഡ്മിൻ കൺട്രോൾ പാനൽ | Admin Security Portal</title>
-  <meta name="robots" content="noindex, nofollow" />
-  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <title>Admin Moderation Portal | Daily Prayer Book for India</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              500: '#f59e0b',
-              600: '#d97706',
-            }
-          }
-        }
-      }
-    }
-  </script>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
   <style>
     body {
-      font-family: 'Inter', 'Noto Sans Malayalam', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    .custom-scroll::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    .custom-scroll::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.6);
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: rgba(245, 158, 11, 0.4);
-      border-radius: 9999px;
+      font-family: 'Inter', 'Noto Sans Malayalam', 'Noto Sans Devanagari', sans-serif;
     }
   </style>
 </head>
-<body class="min-h-full flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-amber-500 selection:text-slate-950">
 
-  <!-- ========================================== -->
-  <!-- 1. ADMIN SECURE LOGIN SCREEN (WHEN LOCKED) -->
-  <!-- ========================================== -->
-  <div id="adminLoginScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-md">
-    <div class="max-w-md w-full bg-slate-900 border border-amber-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
-      <div class="text-center space-y-2">
-        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-2xl shadow-inner">
-          🔐
-        </div>
-        <div class="inline-block px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-[11px] font-bold text-amber-300 uppercase tracking-wider">
-          Admin Security Portal
-        </div>
-        <h1 class="text-xl sm:text-2xl font-extrabold text-white">
-          അഡ്മിൻ ലോഗിൻ (Admin Sign In)
-        </h1>
-        <p class="text-xs sm:text-sm text-slate-400">
-          സുരക്ഷിതമായ പാസ്‌വേഡ് നൽകി അഡ്മിൻ കൺട്രോൾ പാനൽ തുറക്കുക.
-        </p>
-      </div>
-
-      <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs text-slate-400 leading-relaxed">
-        🛡️ ഈ പേജ് സ്വകാര്യമാണ്. ഡിഫോൾട്ട് അഡ്മിൻ യൂസർനേം: <strong class="text-amber-300 font-mono">admin</strong> | പാസ്‌വേഡ്: <strong class="text-amber-300 font-mono">IndiaPrayer@2026</strong>. അകത്ത് കടന്ന ശേഷം പാസ്‌വേഡ് മാറ്റാവുന്നതാണ്.
-      </div>
-
-      <form id="adminLoginForm" class="space-y-4">
-        <div>
-          <label for="adminUsernameInput" class="block text-xs font-semibold text-slate-300 mb-1">
-            യൂസർനേം / ഇമെയിൽ (Username)
-          </label>
-          <input 
-            type="text" 
-            id="adminUsernameInput" 
-            required 
-            placeholder="admin" 
-            value="admin"
-            class="w-full py-2.5 px-3.5 text-sm rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono" 
-          />
-        </div>
-
-        <div>
-          <label for="adminPasswordInput" class="block text-xs font-semibold text-slate-300 mb-1 flex justify-between">
-            <span>അഡ്മിൻ പാസ്‌വേഡ് (Password)</span>
-            <span id="lockoutTimer" class="text-rose-400 text-[11px] font-bold hidden">Lockout active</span>
-          </label>
-          <div class="relative">
-            <input 
-              type="password" 
-              id="adminPasswordInput" 
-              required 
-              placeholder="••••••••••••" 
-              class="w-full py-2.5 px-3.5 text-sm rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 pr-10 font-mono" 
-            />
-            <button type="button" id="toggleAdminPwBtn" class="absolute inset-y-0 right-3 flex items-center text-slate-500 hover:text-slate-300 text-sm">
-              👁️
-            </button>
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2 group">
+          <span class="text-2xl">🔒</span>
+          <div>
+            <h1 class="text-base sm:text-lg font-bold text-amber-400 group-hover:text-amber-300 transition" id="hdrAdminTitle">
+              Admin Moderation Portal
+            </h1>
+            <p class="text-xs text-slate-400" id="hdrAdminSub">Daily Prayer Book for India</p>
           </div>
-          <p id="adminLoginError" class="text-xs text-rose-400 font-medium mt-1.5 hidden">
-            തെറ്റായ പാസ്‌വേഡ്! വീണ്ടും ശ്രമിക്കുക.
-          </p>
-        </div>
-
-        <button 
-          type="submit" 
-          id="adminLoginSubmitBtn"
-          class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2"
-        >
-          <span>അഡ്മിൻ ലോഗിൻ (Sign In)</span>
-          <span>🔓</span>
-        </button>
-      </form>
-
-      <div class="pt-2 border-t border-slate-800 text-center">
-        <a href="https://prayforindia.netlify.app" target="_blank" class="text-xs text-slate-400 hover:text-amber-300 transition">
-          ← പൊതു വെബ്‌സൈറ്റിലേക്ക് മടങ്ങുക (Back to Public Site)
         </a>
       </div>
-    </div>
-  </div>
 
-
-  <!-- ========================================== -->
-  <!-- 2. MAIN ADMIN PORTAL (SHOWN WHEN LOGGED IN) -->
-  <!-- ========================================== -->
-  <div id="adminPortalContainer" class="hidden flex-1 flex flex-col">
-    <header class="bg-slate-900 border-b border-amber-500/30 sticky top-0 z-40 backdrop-blur-md">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 font-black flex items-center justify-center text-lg shadow-md">
-            🇮🇳
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h1 class="font-bold text-sm sm:text-base text-white leading-tight">
-                ഇന്ത്യാ പ്രാർത്ഥന — അഡ്മിൻ കൺട്രോൾ
-              </h1>
-              <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold border border-emerald-500/30">
-                ● Live Storage
-              </span>
-            </div>
-            <p class="text-[11px] text-slate-400 hidden sm:block">
-              Secure Ministry Dashboard & Online Database
-            </p>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2.5">
-          <a 
-            href="https://prayforindia.netlify.app" 
-            target="_blank" 
-            class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition flex items-center gap-1.5 border border-slate-700"
-          >
-            <span>🌐</span>
-            <span class="hidden sm:inline">പൊതു സൈറ്റ്</span>
-          </a>
-          <button 
-            type="button" 
-            id="lockDashboardBtn" 
-            class="px-3 py-1.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 text-rose-300 font-semibold text-xs transition flex items-center gap-1.5 border border-rose-800/60"
-          >
-            <span>🔒</span>
-            <span>ലോഗ് ഔട്ട് (Logout)</span>
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <!-- Sub-Navbar Navigation Tabs -->
-    <div class="bg-slate-900/60 border-b border-slate-800 sticky top-16 z-30 backdrop-blur">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center gap-2 py-2 overflow-x-auto custom-scroll">
-          <button type="button" data-subtab="requests" class="admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 bg-amber-500 text-slate-950 shadow-md">
-            <span>💌</span>
-            <span>പ്രാർത്ഥനാ അപേക്ഷകൾ</span>
-            <span id="badgeReqCount" class="ml-1 px-1.5 py-0.2 rounded-full bg-slate-950 text-amber-300 text-[11px] font-mono">0</span>
-          </button>
-          <button type="button" data-subtab="users" class="admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
-            <span>👥</span>
-            <span>പ്രാർത്ഥനാ പങ്കാളികൾ</span>
-            <span id="badgeUserCount" class="ml-1 px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 text-[11px] font-mono">0</span>
-          </button>
-          <button type="button" data-subtab="password" class="admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
-            <span>🔐</span>
-            <span>അഡ്മിൻ പാസ്‌വേഡ് മാറ്റുക</span>
-          </button>
-          <button type="button" data-subtab="backup" class="admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
-            <span>☁️</span>
-            <span>ഓൺലൈൻ ഡാറ്റാബേസ് & ബാക്കപ്പ്</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-
-      <!-- Metrics -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
-          <div class="text-xs text-slate-400 font-medium">ആകെ അപേക്ഷകൾ</div>
-          <div class="flex items-baseline gap-2">
-            <span id="kpiTotalReq" class="text-2xl font-black text-white font-mono">0</span>
-            <span class="text-xs text-rose-400 font-semibold" id="kpiPendingCount">0 pending</span>
-          </div>
-        </div>
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
-          <div class="text-xs text-slate-400 font-medium">പ്രാർത്ഥനയിൽ ഉള്ളവ</div>
-          <div class="flex items-baseline gap-2">
-            <span id="kpiInPrayerCount" class="text-2xl font-black text-amber-400 font-mono">0</span>
-            <span class="text-xs text-emerald-400 font-semibold" id="kpiAnsweredCount">0 answered</span>
-          </div>
-        </div>
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
-          <div class="text-xs text-slate-400 font-medium">രജിസ്റ്റർ ചെയ്ത പങ്കാളികൾ</div>
-          <div class="flex items-baseline gap-2">
-            <span id="kpiTotalUsers" class="text-2xl font-black text-indigo-400 font-mono">0</span>
-            <span class="text-xs text-slate-400">Partners</span>
-          </div>
-        </div>
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-1">
-          <div class="text-xs text-slate-400 font-medium">സിങ്ക് അവസ്ഥ</div>
-          <div class="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold mt-1">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>തത്സമയം സിങ്ക് ചെയ്യുന്നു</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 1: REQUESTS -->
-      <section id="panelRequests" class="admin-panel space-y-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-          <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
-            <div class="relative flex-1">
-              <span class="absolute inset-y-0 left-3 flex items-center text-slate-500 pointer-events-none">🔍</span>
-              <input 
-                type="text" 
-                id="reqSearchInput" 
-                placeholder="പേര്, ഫോൺ നമ്പർ, സ്ഥലം, വിഷയം തിരയുക..." 
-                class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
-              />
-            </div>
-            <div class="flex items-center gap-2">
-              <select id="reqCategoryFilter" class="px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs sm:text-sm text-slate-200">
-                <option value="all">എല്ലാ വിഭാഗങ്ങളും</option>
-                <option value="Health">ആരോഗ്യം (Health)</option>
-                <option value="Family">കുടുംബം (Family)</option>
-                <option value="Persecution">സമാധാനം (Peace)</option>
-                <option value="Missions">ശുശ്രൂഷകൾ (Missions)</option>
-                <option value="Other">മറ്റുള്ളവ (Other)</option>
-              </select>
-              <button type="button" id="exportReqCsvBtn" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shadow">
-                <span>📥</span>
-                <span>Export CSV</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-2 pt-2 border-t border-slate-800 text-xs overflow-x-auto">
-            <span class="text-slate-400 font-semibold shrink-0">ഫിൽട്ടർ:</span>
-            <button type="button" data-status-filter="all" class="req-status-pill px-3 py-1 rounded-lg font-bold bg-amber-500 text-slate-950">എല്ലാം</button>
-            <button type="button" data-status-filter="pending" class="req-status-pill px-3 py-1 rounded-lg font-semibold bg-slate-800 text-slate-300 hover:text-white">പുതിയത്</button>
-            <button type="button" data-status-filter="in_prayer" class="req-status-pill px-3 py-1 rounded-lg font-semibold bg-slate-800 text-slate-300 hover:text-white">പ്രാർത്ഥനയിൽ</button>
-            <button type="button" data-status-filter="answered" class="req-status-pill px-3 py-1 rounded-lg font-semibold bg-slate-800 text-slate-300 hover:text-white">ഉത്തരം ലഭിച്ചത്</button>
-          </div>
-        </div>
-
-        <div id="requestsListContainer" class="space-y-3"></div>
-      </section>
-
-      <!-- TAB 2: USERS -->
-      <section id="panelUsers" class="admin-panel hidden space-y-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
-          <div class="relative flex-1">
-            <span class="absolute inset-y-0 left-3 flex items-center text-slate-500 pointer-events-none">🔍</span>
-            <input 
-              type="text" 
-              id="userSearchInput" 
-              placeholder="പങ്കാളിയുടെ പേര്, ഫോൺ നമ്പർ, സ്ഥലം തിരയുക..." 
-              class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
-            />
-          </div>
-          <button type="button" id="exportUsersCsvBtn" class="px-3.5 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shadow">
-            <span>📥</span>
-            <span>Export Partners CSV</span>
-          </button>
-        </div>
-        <div id="usersListContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
-      </section>
-
-      <!-- TAB 3: CHANGE ADMIN PASSWORD (KEY REQUIREMENT) -->
-      <section id="panelPassword" class="admin-panel hidden space-y-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl max-w-xl mx-auto space-y-5">
-          <div class="border-b border-slate-800 pb-3">
-            <div class="flex items-center gap-2">
-              <span class="text-2xl">🔐</span>
-              <h3 class="font-extrabold text-base sm:text-lg text-white">
-                അഡ്മിൻ പാസ്‌വേഡ് മാറ്റുക (Change Admin Password)
-              </h3>
-            </div>
-            <p class="text-xs text-slate-400 mt-1">
-              അഡ്മിൻ കൺട്രോൾ പാനലിലേക്ക് സുരക്ഷിതമായി ലോഗിൻ ചെയ്യാൻ പുതിയ പാസ്‌വേഡ് ഇവിടെ മാറ്റാം.
-            </p>
-          </div>
-
-          <form id="changeAdminPasswordForm" class="space-y-4">
-            <div>
-              <label for="currentAdminPw" class="block text-xs font-semibold text-slate-300 mb-1">
-                ഇപ്പോഴത്തെ അഡ്മിൻ പാസ്‌വേഡ് (Current Password) *
-              </label>
-              <input 
-                type="password" 
-                id="currentAdminPw" 
-                required 
-                placeholder="Enter current password (Default: IndiaPrayer@2026)" 
-                class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white font-mono focus:outline-none focus:ring-2 focus:ring-amber-500" 
-              />
-            </div>
-
-            <div>
-              <label for="newAdminPw" class="block text-xs font-semibold text-slate-300 mb-1 flex justify-between">
-                <span>പുതിയ അഡ്മിൻ പാസ്‌വേഡ് (New Password) *</span>
-                <span id="adminStrengthLabel" class="text-[11px] font-bold text-slate-500">Min 8 characters</span>
-              </label>
-              <input 
-                type="password" 
-                id="newAdminPw" 
-                minlength="8" 
-                required 
-                placeholder="Enter strong new password" 
-                class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white font-mono focus:outline-none focus:ring-2 focus:ring-amber-500" 
-              />
-              <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
-                <div id="adminStrengthBar" class="h-full bg-rose-500 w-0 transition-all duration-300"></div>
-              </div>
-            </div>
-
-            <div>
-              <label for="confirmNewAdminPw" class="block text-xs font-semibold text-slate-300 mb-1">
-                പുതിയ പാസ്‌വേഡ് സ്ഥിരീകരിക്കുക (Confirm New Password) *
-              </label>
-              <input 
-                type="password" 
-                id="confirmNewAdminPw" 
-                minlength="8" 
-                required 
-                placeholder="Confirm new password" 
-                class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white font-mono focus:outline-none focus:ring-2 focus:ring-amber-500" 
-              />
-            </div>
-
-            <button 
-              type="submit" 
-              class="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-sm shadow transition"
-            >
-              💾 അഡ്മിൻ പാസ്‌വേഡ് സേവ് ചെയ്യുക (Update Admin Password)
-            </button>
-          </form>
-
-          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400 leading-relaxed space-y-1">
-            <span class="font-bold text-amber-300">🛡️ സുരക്ഷാ നുറുങ്ങ് (Security Tip):</span>
-            <p>പുതിയ പാസ്‌വേഡ് വെബ് ബ്രൗസറിൽ സുരക്ഷിതമായി എൻക്രിപ്റ്റ് ചെയ്ത് (Salted SHA-256) സൂക്ഷിക്കുന്നു. പാസ്‌വേഡ് മാറ്റിയാൽ പുതിയ പാസ്‌വേഡ് ഉപയോഗിച്ച് മാത്രമേ അടുത്ത തവണ ലോഗിൻ ചെയ്യാൻ സാധിക്കൂ.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 4: ONLINE DATABASE & BACKUP -->
-      <section id="panelBackup" class="admin-panel hidden space-y-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-          <div class="border-b border-slate-800 pb-3">
-            <div class="flex items-center gap-2">
-              <span class="text-2xl">☁️</span>
-              <h3 class="font-extrabold text-base sm:text-lg text-white">
-                ഓൺലൈൻ ഡാറ്റാബേസ് & ബാക്കപ്പ് ഹബ് (Online Database Hub)
-              </h3>
-            </div>
-            <p class="text-xs text-slate-400 mt-1">
-              നിങ്ങളുടെ ഉപകരണത്തിലും ക്ലൗഡിലും ഡാറ്റ സുരക്ഷിതമായി സൂക്ഷിക്കുക.
-            </p>
-          </div>
-
-          <!-- Cloud Database Config -->
-          <div class="bg-slate-950 border border-amber-500/30 rounded-2xl p-5 space-y-3">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">🌐</span>
-              <h4 class="font-bold text-sm text-white">ക്ലൗഡ് ഡാറ്റാബേസ് കണക്ഷൻ (Firebase / Supabase Integration)</h4>
-            </div>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              വെബ്‌സൈറ്റിലെ പ്രാർത്ഥനാ അപേക്ഷകളും ഉപയോക്താക്കളുടെ പാസ്‌വേഡുകളും തത്സമയം ഓൺലൈൻ ക്ലൗഡ് ഡാറ്റാബേസിൽ സൂക്ഷിക്കാൻ സൌജന്യ <strong>Firebase Firestore</strong> അല്ലെങ്കിൽ <strong>Supabase</strong> കണക്റ്റ് ചെയ്യാം.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              <div>
-                <label class="block text-[11px] font-bold text-slate-400 mb-1">Firebase Project ID / Supabase URL</label>
-                <input type="text" id="cloudDbUrl" placeholder="https://xyz.supabase.co" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
-              </div>
-              <div>
-                <label class="block text-[11px] font-bold text-slate-400 mb-1">Public API Key (Anon Key)</label>
-                <input type="password" id="cloudDbKey" placeholder="eyJhbGciOi..." class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
-              </div>
-            </div>
-            <button type="button" id="saveCloudDbBtn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs border border-amber-500/40 transition">
-              💾 ക്ലൗഡ് ക്രമീകരണങ്ങൾ സൂക്ഷിക്കുക (Save Cloud Config)
-            </button>
-          </div>
-
-          <!-- Backup Download / Restore -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-3">
-              <h4 class="font-bold text-sm text-white flex items-center gap-1.5">
-                <span>📥</span> <span>മുഴുവൻ ബാക്കപ്പ് ഡൗൺലോഡ്</span>
-              </h4>
-              <p class="text-xs text-slate-400">
-                എല്ലാ പ്രാർത്ഥനാ അപേക്ഷകളും പങ്കാളികളുടെ ഡാറ്റയും ഉൾക്കൊള്ളുന്ന സുരക്ഷിത JSON ഫയൽ ഡൗൺലോഡ് ചെയ്യുക.
-              </p>
-              <button type="button" id="downloadJsonBackupBtn" class="w-full py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow transition">
-                💾 Download Full JSON Backup
-              </button>
-            </div>
-
-            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-3">
-              <h4 class="font-bold text-sm text-white flex items-center gap-1.5">
-                <span>📂</span> <span>ബാക്കപ്പ് റീസ്റ്റോർ ചെയ്യുക</span>
-              </h4>
-              <p class="text-xs text-slate-400">
-                നേരത്തെ സൂക്ഷിച്ച JSON ബാക്കപ്പ് ഫയൽ അപ്‌ലോഡ് ചെയ്ത് വിവരങ്ങൾ പുനഃസ്ഥാപിക്കുക.
-              </p>
-              <label class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs shadow transition flex items-center justify-center gap-2 cursor-pointer border border-slate-700">
-                <span>📁 JSON ഫയൽ തിരഞ്ഞെടുക്കുക</span>
-                <input type="file" id="restoreJsonInput" accept=".json" class="hidden" />
-              </label>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </main>
-  </div>
-
-  <!-- Delete Confirm Modal -->
-  <div id="deleteConfirmModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="max-w-sm w-full bg-slate-900 border border-rose-500/30 rounded-3xl p-6 shadow-2xl space-y-4">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-300 font-bold flex items-center justify-center text-lg">
-          ⚠️
+        <!-- Firebase Cloud Status Badge -->
+        <div id="fbBadge" class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[11px] text-emerald-400 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="fbBadgeText">Firebase Cloud Connected</span>
+        </div>
+
+        <!-- Language Switcher -->
+        <div class="inline-flex rounded-lg bg-slate-800 p-1 border border-slate-700 text-xs font-semibold">
+          <button type="button" onclick="setAdminLang('en')" id="langEn" class="px-2.5 py-1 rounded transition bg-amber-500 text-slate-950 font-bold">EN</button>
+          <button type="button" onclick="setAdminLang('hi')" id="langHi" class="px-2.5 py-1 rounded transition text-slate-300 hover:text-white">हि</button>
+          <button type="button" onclick="setAdminLang('ml')" id="langMl" class="px-2.5 py-1 rounded transition text-slate-300 hover:text-white">മല</button>
+        </div>
+
+        <a href="index.html" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-slate-200 transition flex items-center gap-1.5">
+          <span>📖</span>
+          <span id="backToHomeText">Prayer Guide</span>
+        </a>
+
+        <button id="logoutBtn" onclick="handleAdminLogout()" class="hidden px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-xs font-bold transition">
+          <span id="logoutBtnText">Sign Out</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification Toast -->
+  <div class="max-w-7xl mx-auto px-4 w-full mt-4">
+    <div id="toastBox" class="hidden p-4 rounded-xl text-sm font-medium border flex items-center justify-between gap-3 shadow-lg">
+      <span id="toastMsg"></span>
+      <button onclick="hideToast()" class="text-slate-400 hover:text-white text-lg">&times;</button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+
+    <!-- VIEW 1: ADMIN LOGIN -->
+    <div id="adminAuthSection" class="max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl mt-12">
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-2xl text-amber-400 mx-auto mb-3">
+          🔒
+        </div>
+        <h2 class="text-xl font-extrabold text-white" id="authTitle">Admin Sign In</h2>
+        <p class="text-xs text-slate-400 mt-1" id="authSub">Daily Prayer Book for India Moderation</p>
+      </div>
+
+      <!-- Lockout Warning -->
+      <div id="lockoutWarning" class="hidden mb-4 p-3.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-semibold">
+        <span id="lockoutText">Account temporarily locked. Please wait.</span>
+      </div>
+
+      <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1" id="lblUser">Username</label>
+          <input type="text" id="adminUser" required value="admin" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm">
         </div>
         <div>
-          <h3 class="font-bold text-sm text-white">സ്ഥിരീകരിക്കുക (Confirm)</h3>
-          <p id="deleteConfirmText" class="text-xs text-slate-400">ഈ ഇനം തീർച്ചയായും ഒഴിവാക്കണമോ?</p>
+          <label class="block text-xs font-bold text-slate-300 mb-1" id="lblPass">Password</label>
+          <input type="password" id="adminPass" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm" placeholder="IndiaPrayer@2026">
+          <p class="text-[11px] text-slate-500 mt-1" id="lblDefaultPass">Default: <code class="text-amber-400 font-mono">IndiaPrayer@2026</code></p>
+        </div>
+        <button type="submit" id="btnAdminSignIn" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-sm shadow transition">
+          Sign In as Admin
+        </button>
+      </form>
+    </div>
+
+    <!-- VIEW 2: ADMIN DASHBOARD -->
+    <div id="adminDashboardSection" class="hidden space-y-6">
+
+      <!-- KPI Overview Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="text-xs text-slate-400 font-medium" id="kpiLblTotal">Total Requests</div>
+          <div class="text-2xl font-extrabold text-white mt-1" id="kpiTotal">0</div>
+          <div class="text-[10px] text-slate-500 mt-0.5" id="kpiSubTotal">All Submissions</div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="text-xs text-slate-400 font-medium" id="kpiLblUrgent">Urgent Requests</div>
+          <div class="text-2xl font-extrabold text-rose-400 mt-1" id="kpiUrgent">0</div>
+          <div class="text-[10px] text-slate-500 mt-0.5" id="kpiSubUrgent">High Priority</div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="text-xs text-slate-400 font-medium" id="kpiLblAnswered">Answered Prayers</div>
+          <div class="text-2xl font-extrabold text-emerald-400 mt-1" id="kpiAnswered">0</div>
+          <div class="text-[10px] text-slate-500 mt-0.5" id="kpiSubAnswered">Praise Reports</div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="text-xs text-slate-400 font-medium" id="kpiLblIntercessors">Registered Intercessors</div>
+          <div class="text-2xl font-extrabold text-amber-400 mt-1" id="kpiParticipants">0</div>
+          <div class="text-[10px] text-slate-500 mt-0.5" id="kpiSubIntercessors">Firebase Synced</div>
         </div>
       </div>
-      <div class="flex items-center justify-end gap-2 pt-2">
-        <button type="button" id="cancelDeleteBtn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
-          റദ്ദാക്കുക (Cancel)
-        </button>
-        <button type="button" id="confirmDeleteBtn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow">
-          ഒഴിവാക്കുക (Delete)
-        </button>
+
+      <!-- Moderation Tabs & Filters -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-slate-800 pb-4">
+          <div>
+            <h2 class="text-lg font-bold text-white" id="modSectionTitle">Prayer Requests Moderation</h2>
+            <p class="text-xs text-slate-400" id="modSectionSub">Review, flag urgent, mark answered, or remove inappropriate requests in real time.</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <input type="text" id="adminSearchInput" oninput="filterAdminTable()" placeholder="Search requests..." class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-amber-400">
+            <select id="adminCategoryFilter" onchange="filterAdminTable()" class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-amber-400">
+              <option value="all" id="catAll">All Categories</option>
+              <option value="church" id="catChurch">Church & Pastors</option>
+              <option value="persecuted" id="catPersecuted">Persecuted Church</option>
+              <option value="unreached" id="catUnreached">Unreached Regions</option>
+              <option value="nation" id="catNation">Nation & Leaders</option>
+              <option value="personal" id="catPersonal">Personal & Family</option>
+              <option value="revival" id="catRevival">Revival & Missions</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Table of Requests -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400 font-semibold bg-slate-950/50">
+                <th class="p-3">ID</th>
+                <th class="p-3" id="thTopic">Prayer Topic & Details</th>
+                <th class="p-3" id="thRequester">Requester</th>
+                <th class="p-3" id="thLocation">Location</th>
+                <th class="p-3" id="thCategory">Category</th>
+                <th class="p-3" id="thStatus">Status</th>
+                <th class="p-3 text-right" id="thActions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody" class="divide-y divide-slate-800/60 font-normal">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
       </div>
+
+      <!-- Registered Intercessors List & Security Log Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Intercessors List -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <h3 class="text-sm font-bold text-white mb-3 flex items-center justify-between">
+            <span id="cardIntercessorsTitle">Registered Intercessors (Firebase Cloud)</span>
+            <span id="intercessorCountBadge" class="text-xs text-amber-400 font-mono px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30">0</span>
+          </h3>
+          <div class="max-h-64 overflow-y-auto divide-y divide-slate-800 text-xs" id="intercessorsList">
+            <!-- Dynamic list -->
+          </div>
+        </div>
+
+        <!-- Security Audit Log -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <h3 class="text-sm font-bold text-white mb-3 flex items-center justify-between">
+            <span id="cardSecurityTitle">Security Audit Log</span>
+            <span class="text-xs text-emerald-400 font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30">Live Cloud</span>
+          </h3>
+          <div class="max-h-64 overflow-y-auto space-y-2 text-[11px] font-mono text-slate-300" id="securityLogList">
+            <!-- Dynamic log entries -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Password Change Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xl">
+        <h3 class="text-sm font-bold text-white mb-1" id="cardChangePassTitle">Change Admin Password</h3>
+        <p class="text-xs text-slate-400 mb-4" id="cardChangePassSub">Updates the master admin password securely in Firebase Realtime Database.</p>
+        <form onsubmit="handleAdminChangePassword(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1" id="lblCurrPass">Current Password</label>
+            <input type="password" id="adminOldPass" required class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1" id="lblNewPass">New Password</label>
+            <input type="password" id="adminNewPass" required minlength="6" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+          </div>
+          <button type="submit" id="btnUpdateAdminPass" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 text-xs font-bold transition shadow">
+            Update Admin Password
+          </button>
+        </form>
+      </div>
+
     </div>
-  </div>
+  </main>
 
-  <!-- Toast -->
-  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 hidden max-w-sm rounded-xl bg-slate-900 text-white px-4 py-3 shadow-2xl border border-amber-400/50 flex items-center gap-2.5 text-xs sm:text-sm font-medium">
-    <span id="toastIcon">✨</span>
-    <span id="toastMessage">Done!</span>
-  </div>
+  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500 mt-auto">
+    <p id="footerText">Daily Prayer Book for India • Admin & Moderation System</p>
+  </footer>
 
+  <!-- Scripts -->
+  <script src="prayer-sync.js"></script>
   <script>
-    // State Store
-    const state = {
-      isAdminLogged: false,
-      adminUsername: 'admin',
-      adminSalt: 'admin_salt_pray_india_2026',
-      adminPasswordHash: 'dcebab0df15ec0e5201e3db11456e64990d651813e7918534ee2f81248dd47be',
-      failedAttempts: 0,
-      lockedUntil: 0,
-      prayerRequests: [],
-      participants: [],
-      activeSubTab: 'requests',
-      reqSearchQuery: '',
-      reqStatusFilter: 'all',
-      reqCategoryFilter: 'all',
-      userSearchQuery: ''
+    let allRequests = [];
+    let currentAdminLang = 'en';
+
+    const I18N_ADMIN = {
+      en: {
+        hdrTitle: 'Admin Moderation Portal',
+        hdrSub: 'Daily Prayer Book for India',
+        fbBadge: 'Firebase Cloud Connected',
+        backToHome: 'Prayer Guide',
+        logout: 'Sign Out',
+        authTitle: 'Admin Sign In',
+        authSub: 'Daily Prayer Book for India Moderation',
+        lblUser: 'Username',
+        lblPass: 'Password',
+        lblDefaultPass: 'Default: IndiaPrayer@2026',
+        btnAdminSignIn: 'Sign In as Admin',
+        kpiTotal: 'Total Requests',
+        kpiSubTotal: 'All Submissions',
+        kpiUrgent: 'Urgent Requests',
+        kpiSubUrgent: 'High Priority',
+        kpiAnswered: 'Answered Prayers',
+        kpiSubAnswered: 'Praise Reports',
+        kpiIntercessors: 'Registered Intercessors',
+        kpiSubIntercessors: 'Firebase Synced',
+        modTitle: 'Prayer Requests Moderation',
+        modSub: 'Review, flag urgent, mark answered, or remove inappropriate requests in real time.',
+        searchPlaceholder: 'Search requests...',
+        catAll: 'All Categories',
+        catChurch: 'Church & Pastors',
+        catPersecuted: 'Persecuted Church',
+        catUnreached: 'Unreached Regions',
+        catNation: 'Nation & Leaders',
+        catPersonal: 'Personal & Family',
+        catRevival: 'Revival & Missions',
+        thTopic: 'Prayer Topic & Details',
+        thRequester: 'Requester',
+        thLocation: 'Location',
+        thCategory: 'Category',
+        thStatus: 'Status',
+        thActions: 'Actions',
+        cardIntercessors: 'Registered Intercessors (Firebase Cloud)',
+        cardSecurity: 'Security Audit Log',
+        cardChangePass: 'Change Admin Password',
+        cardChangePassSub: 'Updates the master admin password securely in Firebase Realtime Database.',
+        lblCurrPass: 'Current Password',
+        lblNewPass: 'New Password',
+        btnUpdatePass: 'Update Admin Password',
+        footer: 'Daily Prayer Book for India • Admin & Moderation System',
+        confirmDelete: 'Are you sure you want to permanently delete this prayer request from Firebase?'
+      },
+      hi: {
+        hdrTitle: 'एडमिन मॉडरेशन पोर्टल',
+        hdrSub: 'भारत के लिए दैनिक प्रार्थना पुस्तिका',
+        fbBadge: 'फायरबेस क्लाउड कनेक्टेड',
+        backToHome: 'प्रार्थना सहायिका',
+        logout: 'साइन आउट',
+        authTitle: 'एडमिन साइन इन',
+        authSub: 'दैनिक प्रार्थना पुस्तिका मॉडरेशन',
+        lblUser: 'उपयोगकर्ता नाम',
+        lblPass: 'पासवर्ड',
+        lblDefaultPass: 'डिफ़ॉल्ट: IndiaPrayer@2026',
+        btnAdminSignIn: 'एडमिन के रूप में साइन इन करें',
+        kpiTotal: 'कुल प्रार्थना निवेदन',
+        kpiSubTotal: 'सभी प्रस्तुतियाँ',
+        kpiUrgent: 'अति आवश्यक निवेदन',
+        kpiSubUrgent: 'उच्च प्राथमिकता',
+        kpiAnswered: 'उत्तर प्राप्त प्रार्थनाएँ',
+        kpiSubAnswered: 'धन्यवाद एवं गवाहियाँ',
+        kpiIntercessors: 'पंजीकृत मध्यस्थ',
+        kpiSubIntercessors: 'फायरबेस सिंक',
+        modTitle: 'प्रार्थना निवेदनों का नियंत्रण',
+        modSub: 'निवेदनों की समीक्षा करें, अत्यावश्यक चिह्नित करें, या अनुचित विषय हटाएं।',
+        searchPlaceholder: 'विषय या प्रार्थी खोजें...',
+        catAll: 'सभी श्रेणियां',
+        catChurch: 'कलीसिया एवं सेवक',
+        catPersecuted: 'सताई गई कलीसिया',
+        catUnreached: 'सुसमाचार रहित क्षेत्र',
+        catNation: 'राष्ट्र एवं नेतृत्व',
+        catPersonal: 'व्यक्तिगत / परिवार',
+        catRevival: 'आत्मिक जागृति एवं मिशन',
+        thTopic: 'प्रार्थना विषय एवं विवरण',
+        thRequester: 'प्रार्थी',
+        thLocation: 'स्थान / राज्य',
+        thCategory: 'श्रेणी',
+        thStatus: 'स्थिति',
+        thActions: 'कार्यवाही',
+        cardIntercessors: 'पंजीकृत मध्यस्थ योद्धा (फायरबेस क्लाउड)',
+        cardSecurity: 'सुरक्षा ऑडिट लॉग',
+        cardChangePass: 'एडमिन पासवर्ड बदलें',
+        cardChangePassSub: 'मास्टर एडमिन पासवर्ड को फायरबेस डेटाबेस में सुरक्षित अपडेट करें।',
+        lblCurrPass: 'वर्तमान पासवर्ड',
+        lblNewPass: 'नया पासवर्ड',
+        btnUpdatePass: 'एडमिन पासवर्ड अपडेट करें',
+        footer: 'भारत के लिए दैनिक प्रार्थना पुस्तिका • एडमिन एवं मॉडरेशन प्रणाली',
+        confirmDelete: 'क्या आप वाकई इस प्रार्थना निवेदन को फायरबेस से स्थायी रूप से हटाना चाहते हैं?'
+      },
+      ml: {
+        hdrTitle: 'അഡ്മിൻ മോഡറേഷൻ പോർട്ടൽ',
+        hdrSub: 'ഇന്ത്യയ്ക്കുവേണ്ടിയുള്ള അനുദിന പ്രാർത്ഥനാ പുസ്തകം',
+        fbBadge: 'ഫയർബേസ് ക്ലൗഡ് കണക്റ്റഡ്',
+        backToHome: 'പ്രാർത്ഥനാ സഹായി',
+        logout: 'പുറത്തുപോകുക',
+        authTitle: 'അഡ്മിൻ പ്രവേശനം',
+        authSub: 'അനുദിന പ്രാർത്ഥനാ പുസ്തക നിയന്ത്രണം',
+        lblUser: 'ഉപയോക്തൃനാമം',
+        lblPass: 'പാസ്‌വേഡ്',
+        lblDefaultPass: 'സ്ഥിരം: IndiaPrayer@2026',
+        btnAdminSignIn: 'അഡ്മിനായി പ്രവേശിക്കുക',
+        kpiTotal: 'ആകെ വിഷയങ്ങൾ',
+        kpiSubTotal: 'എല്ലാ അപേക്ഷകളും',
+        kpiUrgent: 'അടിയന്തര വിഷയങ്ങൾ',
+        kpiSubUrgent: 'മുൻഗണനാ വിഷയങ്ങൾ',
+        kpiAnswered: 'ഉത്തരം ലഭിച്ചവ',
+        kpiSubAnswered: 'സ്തുതിപ്പുകൾ',
+        kpiIntercessors: 'രജിസ്റ്റർ ചെയ്ത മധ്യസ്ഥർ',
+        kpiSubIntercessors: 'ഫയർബേസ് സിങ്ക്',
+        modTitle: 'പ്രാർത്ഥനാ വിഷയങ്ങളുടെ നിയന്ത്രണം',
+        modSub: 'വിഷയങ്ങൾ പരിശോധിക്കുക, അടിയന്തരമായി അടയാളപ്പെടുത്തുക, അല്ലെങ്കിൽ നീക്കം ചെയ്യുക.',
+        searchPlaceholder: 'വിഷയം അല്ലെങ്കിൽ പേര് തിരയുക...',
+        catAll: 'എല്ലാ വിഭാഗവും',
+        catChurch: 'സഭ & ശുശ്രൂഷകർ',
+        catPersecuted: 'പീഡിത സഭ',
+        catUnreached: 'സുവിശേഷം എത്താത്തവർ',
+        catNation: 'ഭാരതം & നേതൃത്വം',
+        catPersonal: 'വ്യക്തിപരം / കുടുംബം',
+        catRevival: 'ആത്മീയ ഉണർവ് & മിഷൻ',
+        thTopic: 'പ്രാർത്ഥനാ വിഷയം & വിവരങ്ങൾ',
+        thRequester: 'അപേക്ഷകൻ',
+        thLocation: 'സ്ഥലം / സംസ്ഥാനം',
+        thCategory: 'വിഭാഗം',
+        thStatus: 'സ്റ്റാറ്റസ്',
+        thActions: 'നടപടികൾ',
+        cardIntercessors: 'രജിസ്റ്റർ ചെയ്ത മധ്യസ്ഥർ (ഫയർബേസ് ക്ലൗഡ്)',
+        cardSecurity: 'സുരക്ഷാ ഓഡിറ്റ് ലോഗ്',
+        cardChangePass: 'അഡ്മിൻ പാസ്‌വേഡ് മാറ്റുക',
+        cardChangePassSub: 'ഫയർബേസ് ഡാറ്റാബേസിൽ പുതിയ പാസ്‌വേഡ് അപ്‌ഡേറ്റ് ചെയ്യുക.',
+        lblCurrPass: 'നിലവിലെ പാസ്‌വേഡ്',
+        lblNewPass: 'പുതിയ പാസ്‌വേഡ്',
+        btnUpdatePass: 'പാസ്‌വേഡ് മാറ്റുക',
+        footer: 'ഇന്ത്യയ്ക്കുവേണ്ടിയുള്ള അനുദിന പ്രാർത്ഥനാ പുസ്തകം • അഡ്മിൻ സിസ്റ്റം',
+        confirmDelete: 'ഈ പ്രാർത്ഥനാ വിഷയം ഫയർബേസിൽ നിന്ന് പൂർണ്ണമായി നീക്കം ചെയ്യാൻ നിങ്ങൾ ആഗ്രഹിക്കുന്നുവോ?'
+      }
     };
 
-    const syncChannel = window.BroadcastChannel ? new BroadcastChannel('india_prayer_sync') : null;
-    let pendingDeleteCallback = null;
-
-    async function hashPassword(password, salt) {
-      if (window.crypto && window.crypto.subtle) {
-        try {
-          const enc = new TextEncoder();
-          const data = enc.encode(password + '::' + salt);
-          const buf = await crypto.subtle.digest('SHA-256', data);
-          return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-        } catch(e) {}
+    function setAdminLang(lang) {
+      currentAdminLang = lang;
+      document.documentElement.lang = lang;
+      ['en', 'hi', 'ml'].forEach(l => {
+        const btn = document.getElementById('lang' + l.charAt(0).toUpperCase() + l.slice(1));
+        if (btn) {
+          if (l === lang) {
+            btn.className = 'px-2.5 py-1 rounded transition bg-amber-500 text-slate-950 font-bold';
+          } else {
+            btn.className = 'px-2.5 py-1 rounded transition text-slate-300 hover:text-white';
+          }
+        }
+      });
+      if (window.PrayerSync && PrayerSync.setLang) {
+        PrayerSync.setLang(lang);
       }
-      let hash = 0;
-      const str = password + '::' + salt;
-      for (let i = 0; i < str.length; i++) {
-        hash = ((hash << 5) - hash) + str.charCodeAt(i);
-        hash |= 0;
+      applyAdminLangUI();
+      if (allRequests.length > 0) {
+        renderTable(allRequests);
       }
-      return 'hash_' + Math.abs(hash).toString(16);
     }
 
-    function showToast(msg, icon = '✨') {
-      const toast = document.getElementById('toastNotification');
-      document.getElementById('toastMessage').textContent = msg;
-      document.getElementById('toastIcon').textContent = icon;
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 3500);
+    function applyAdminLangUI() {
+      const d = I18N_ADMIN[currentAdminLang] || I18N_ADMIN.en;
+      document.getElementById('hdrAdminTitle').innerText = d.hdrTitle;
+      document.getElementById('hdrAdminSub').innerText = d.hdrSub;
+      document.getElementById('fbBadgeText').innerText = d.fbBadge;
+      document.getElementById('backToHomeText').innerText = d.backToHome;
+      document.getElementById('logoutBtnText').innerText = d.logout;
+
+      document.getElementById('authTitle').innerText = d.authTitle;
+      document.getElementById('authSub').innerText = d.authSub;
+      document.getElementById('lblUser').innerText = d.lblUser;
+      document.getElementById('lblPass').innerText = d.lblPass;
+      document.getElementById('lblDefaultPass').innerHTML = d.lblDefaultPass.replace('IndiaPrayer@2026', '<code class="text-amber-400 font-mono">IndiaPrayer@2026</code>');
+      document.getElementById('btnAdminSignIn').innerText = d.btnAdminSignIn;
+
+      document.getElementById('kpiLblTotal').innerText = d.kpiTotal;
+      document.getElementById('kpiSubTotal').innerText = d.kpiSubTotal;
+      document.getElementById('kpiLblUrgent').innerText = d.kpiUrgent;
+      document.getElementById('kpiSubUrgent').innerText = d.kpiSubUrgent;
+      document.getElementById('kpiLblAnswered').innerText = d.kpiAnswered;
+      document.getElementById('kpiSubAnswered').innerText = d.kpiSubAnswered;
+      document.getElementById('kpiLblIntercessors').innerText = d.kpiIntercessors;
+      document.getElementById('kpiSubIntercessors').innerText = d.kpiSubIntercessors;
+
+      document.getElementById('modSectionTitle').innerText = d.modTitle;
+      document.getElementById('modSectionSub').innerText = d.modSub;
+      document.getElementById('adminSearchInput').placeholder = d.searchPlaceholder;
+
+      document.getElementById('catAll').innerText = d.catAll;
+      document.getElementById('catChurch').innerText = d.catChurch;
+      document.getElementById('catPersecuted').innerText = d.catPersecuted;
+      document.getElementById('catUnreached').innerText = d.catUnreached;
+      document.getElementById('catNation').innerText = d.catNation;
+      document.getElementById('catPersonal').innerText = d.catPersonal;
+      document.getElementById('catRevival').innerText = d.catRevival;
+
+      document.getElementById('thTopic').innerText = d.thTopic;
+      document.getElementById('thRequester').innerText = d.thRequester;
+      document.getElementById('thLocation').innerText = d.thLocation;
+      document.getElementById('thCategory').innerText = d.thCategory;
+      document.getElementById('thStatus').innerText = d.thStatus;
+      document.getElementById('thActions').innerText = d.thActions;
+
+      document.getElementById('cardIntercessorsTitle').innerText = d.cardIntercessors;
+      document.getElementById('cardSecurityTitle').innerText = d.cardSecurity;
+      document.getElementById('cardChangePassTitle').innerText = d.cardChangePass;
+      document.getElementById('cardChangePassSub').innerText = d.cardChangePassSub;
+      document.getElementById('lblCurrPass').innerText = d.lblCurrPass;
+      document.getElementById('lblNewPass').innerText = d.lblNewPass;
+      document.getElementById('btnUpdateAdminPass').innerText = d.btnUpdatePass;
+      document.getElementById('footerText').innerText = d.footer;
+    }
+
+    function showToast(msg, isError = false) {
+      const box = document.getElementById('toastBox');
+      const msgEl = document.getElementById('toastMsg');
+      box.className = 'p-4 rounded-xl text-sm font-medium border flex items-center justify-between gap-3 shadow-lg ' +
+        (isError ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40');
+      msgEl.innerText = msg;
+      box.classList.remove('hidden');
+    }
+
+    function hideToast() {
+      document.getElementById('toastBox').classList.add('hidden');
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('adminUser').value.trim();
+      const pass = document.getElementById('adminPass').value.trim();
+
+      showToast('Connecting to Firebase and authenticating admin...');
+      if (window.PrayerSync && PrayerSync.loginAdmin) {
+        const res = await PrayerSync.loginAdmin(user, pass);
+        if (res.ok) {
+          showToast('Admin authenticated successfully via Firebase Cloud!');
+          renderAdminDashboard();
+        } else {
+          showToast((res.errorTrilingual ? (res.errorTrilingual[currentAdminLang] || res.errorTrilingual.en) : res.error) || 'Invalid admin credentials', true);
+          checkLockout();
+        }
+      }
+    }
+
+    function checkLockout() {
+      if (window.PrayerSync && PrayerSync.getAdminLockoutState) {
+        const lock = PrayerSync.getAdminLockoutState();
+        const warn = document.getElementById('lockoutWarning');
+        const text = document.getElementById('lockoutText');
+        if (lock && lock.locked) {
+          warn.classList.remove('hidden');
+          text.innerText = `Account temporarily locked! Remaining seconds: ${lock.remainingSeconds}`;
+        } else {
+          warn.classList.add('hidden');
+        }
+      }
+    }
+
+    function renderAdminDashboard() {
+      document.getElementById('adminAuthSection').classList.add('hidden');
+      document.getElementById('adminDashboardSection').classList.remove('hidden');
+      document.getElementById('logoutBtn').classList.remove('hidden');
+
+      loadData();
+    }
+
+    async function loadData() {
+      if (window.PrayerSync) {
+        // Fetch prayers from Firebase
+        if (PrayerSync.fetchPrayerRequests) {
+          allRequests = await PrayerSync.fetchPrayerRequests();
+        } else {
+          allRequests = PrayerSync.getPrayerRequests ? PrayerSync.getPrayerRequests() : [];
+        }
+
+        // Fetch participants from Firebase
+        let participants = [];
+        if (PrayerSync.fetchParticipants) {
+          participants = await PrayerSync.fetchParticipants();
+        } else {
+          participants = PrayerSync.getLocalParticipants ? PrayerSync.getLocalParticipants() : [];
+        }
+
+        // Fetch security audit logs from Firebase
+        let secLogs = [];
+        if (PrayerSync.fetchSecurityLog) {
+          secLogs = await PrayerSync.fetchSecurityLog();
+        } else {
+          secLogs = PrayerSync.getSecurityLog ? PrayerSync.getSecurityLog() : [];
+        }
+
+        // KPI stats
+        const urgentCount = allRequests.filter(r => r.urgent || r.isUrgent).length;
+        const answeredCount = allRequests.filter(r => r.answered).length;
+        document.getElementById('kpiTotal').innerText = allRequests.length;
+        document.getElementById('kpiUrgent').innerText = urgentCount;
+        document.getElementById('kpiAnswered').innerText = answeredCount;
+        document.getElementById('kpiParticipants').innerText = participants.length;
+        document.getElementById('intercessorCountBadge').innerText = participants.length;
+
+        // Render table
+        renderTable(allRequests);
+
+        // Render participants
+        renderParticipants(participants);
+
+        // Render security logs
+        renderSecurityLog(secLogs);
+      }
+    }
+
+    function renderTable(requests) {
+      const tbody = document.getElementById('adminTableBody');
+      if (!requests || requests.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-500">No prayer requests recorded yet.</td></tr>';
+        return;
+      }
+
+      const lang = currentAdminLang;
+      tbody.innerHTML = requests.map(req => {
+        let title = '';
+        if (req.title) {
+          if (typeof req.title === 'object') {
+            title = req.title[lang] || req.title.en || req.title.hi || req.title.ml || 'Prayer Request';
+          } else {
+            title = req.title;
+          }
+        } else {
+          title = 'Untitled Request';
+        }
+
+        let desc = '';
+        if (req.content) {
+          if (typeof req.content === 'object') {
+            desc = req.content[lang] || req.content.en || req.content.hi || req.content.ml || '';
+          } else {
+            desc = req.content;
+          }
+        }
+
+        const requester = req.requesterName || (req.anonymous ? 'Anonymous' : 'Intercessor');
+        const loc = req.location || (req.stateDay ? 'Day ' + req.stateDay : 'All India');
+        const cat = req.category || 'church';
+        const isUrgent = Boolean(req.urgent || req.isUrgent);
+        const isAnswered = Boolean(req.answered);
+
+        return `
+          <tr class="hover:bg-slate-900/60 transition">
+            <td class="p-3 font-mono text-slate-500">${req.id || '#'}</td>
+            <td class="p-3 max-w-xs">
+              <div class="font-bold text-slate-200 line-clamp-1">${escapeHtml(title)}</div>
+              <div class="text-[11px] text-slate-400 line-clamp-1 mt-0.5">${escapeHtml(desc)}</div>
+            </td>
+            <td class="p-3 text-slate-300 font-medium">${escapeHtml(requester)}</td>
+            <td class="p-3 text-slate-400">${escapeHtml(loc)}</td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 text-[10px] uppercase font-bold tracking-wider">${escapeHtml(cat)}</span>
+            </td>
+            <td class="p-3">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                ${isUrgent ? '<span class="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold">🚨 Urgent</span>' : ''}
+                ${isAnswered ? '<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">✨ Answered</span>' : ''}
+                ${(!isUrgent && !isAnswered) ? '<span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 text-[10px]">Active</span>' : ''}
+              </div>
+            </td>
+            <td class="p-3 text-right">
+              <div class="inline-flex items-center gap-1">
+                <button onclick="toggleUrgent('${req.id || req.clientId}')" title="Toggle Urgent Status" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-rose-400 font-bold text-xs transition border border-slate-700">
+                  🚨
+                </button>
+                <button onclick="toggleAnswered('${req.id || req.clientId}')" title="Mark as Answered" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold text-xs transition border border-slate-700">
+                  ✨
+                </button>
+                <button onclick="deleteRequest('${req.id || req.clientId}')" title="Delete from Firebase" class="px-2 py-1 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-xs transition border border-rose-500/30">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderParticipants(list) {
+      const el = document.getElementById('intercessorsList');
+      if (!list || list.length === 0) {
+        el.innerHTML = '<div class="p-4 text-center text-slate-500">No registered intercessors in Firebase yet.</div>';
+        return;
+      }
+      el.innerHTML = list.map(p => `
+        <div class="py-2.5 flex items-center justify-between">
+          <div>
+            <div class="font-bold text-slate-200">${escapeHtml(p.fullName || p.name || p.username || p.email)}</div>
+            <div class="text-[10px] text-slate-400">${escapeHtml(p.stateRegion || p.state || 'India')} • ${escapeHtml(p.commitment || 'Daily 31 Days')} • ${escapeHtml(p.email || p.username)}</div>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 font-mono">Intercessor</span>
+        </div>
+      `).join('');
+    }
+
+    function renderSecurityLog(logs) {
+      const el = document.getElementById('securityLogList');
+      const list = logs || ((window.PrayerSync && PrayerSync.getSecurityLog) ? PrayerSync.getSecurityLog() : []);
+      if (!list || list.length === 0) {
+        el.innerHTML = '<div class="p-4 text-center text-slate-500">No security audit entries recorded.</div>';
+        return;
+      }
+      el.innerHTML = list.slice(0, 15).map(l => `
+        <div class="p-2 rounded bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+          <span><span class="text-amber-400">[${escapeHtml(l.type || 'INFO')}]</span> ${escapeHtml(l.detail || '')} (${escapeHtml(l.actor || 'system')})</span>
+          <span class="text-slate-500 text-[10px]">${l.timestamp ? new Date(l.timestamp).toLocaleTimeString() : ''}</span>
+        </div>
+      `).join('');
+    }
+
+    function filterAdminTable() {
+      const q = document.getElementById('adminSearchInput').value.toLowerCase();
+      const cat = document.getElementById('adminCategoryFilter').value;
+
+      const filtered = allRequests.filter(r => {
+        let title = '';
+        if (r.title) {
+          if (typeof r.title === 'object') {
+            title = (r.title.en || '') + ' ' + (r.title.hi || '') + ' ' + (r.title.ml || '');
+          } else {
+            title = String(r.title);
+          }
+        }
+        const requester = String(r.requesterName || '');
+        const matchesQ = !q || title.toLowerCase().includes(q) || requester.toLowerCase().includes(q);
+        const matchesCat = (cat === 'all') || (r.category === cat);
+        return matchesQ && matchesCat;
+      });
+
+      renderTable(filtered);
+    }
+
+    async function toggleUrgent(id) {
+      const req = allRequests.find(r => String(r.id) === String(id) || String(r.clientId) === String(id));
+      if (!req) return;
+      const newStatus = !(req.urgent || req.isUrgent);
+      if (window.PrayerSync && PrayerSync.updatePrayerRequest) {
+        showToast('Updating urgent status in Firebase Cloud...');
+        await PrayerSync.updatePrayerRequest(id, { urgent: newStatus, isUrgent: newStatus });
+        showToast(`Request #${id} urgent status updated!`);
+        loadData();
+      }
+    }
+
+    async function toggleAnswered(id) {
+      const req = allRequests.find(r => String(r.id) === String(id) || String(r.clientId) === String(id));
+      if (!req) return;
+      const newAnswered = !req.answered;
+      if (window.PrayerSync && PrayerSync.updatePrayerRequest) {
+        showToast('Updating answered status in Firebase Cloud...');
+        await PrayerSync.updatePrayerRequest(id, { answered: newAnswered });
+        showToast(`Request #${id} marked as answered!`);
+        loadData();
+      }
+    }
+
+    async function deleteRequest(id) {
+      const d = I18N_ADMIN[currentAdminLang] || I18N_ADMIN.en;
+      if (!confirm(d.confirmDelete)) return;
+      if (window.PrayerSync && PrayerSync.deletePrayerRequest) {
+        showToast('Deleting prayer request from Firebase Cloud...');
+        await PrayerSync.deletePrayerRequest(id);
+        showToast(`Request #${id} permanently deleted from Firebase.`);
+        loadData();
+      }
+    }
+
+    async function handleAdminChangePassword(e) {
+      e.preventDefault();
+      const oldPass = document.getElementById('adminOldPass').value;
+      const newPass = document.getElementById('adminNewPass').value;
+
+      if (window.PrayerSync && PrayerSync.changeAdminPassword) {
+        showToast('Updating admin password in Firebase Cloud...');
+        const res = await PrayerSync.changeAdminPassword(oldPass, newPass);
+        if (res.ok) {
+          showToast((res.messageTrilingual ? (res.messageTrilingual[currentAdminLang] || res.messageTrilingual.en) : 'Admin password updated in Firebase Cloud!'));
+          document.getElementById('adminOldPass').value = '';
+          document.getElementById('adminNewPass').value = '';
+          loadData();
+        } else {
+          showToast((res.errorTrilingual ? (res.errorTrilingual[currentAdminLang] || res.errorTrilingual.en) : res.error) || 'Failed to update admin password', true);
+        }
+      }
+    }
+
+    function handleAdminLogout() {
+      if (window.PrayerSync && PrayerSync.logoutAdmin) {
+        PrayerSync.logoutAdmin();
+      }
+      document.getElementById('adminDashboardSection').classList.add('hidden');
+      document.getElementById('adminAuthSection').classList.remove('hidden');
+      document.getElementById('logoutBtn').classList.add('hidden');
+      showToast('Admin signed out.');
     }
 
     function escapeHtml(str) {
       if (!str) return '';
-      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-    }
-
-    function openDeleteConfirmModal(message, callback) {
-      document.getElementById('deleteConfirmText').textContent = message;
-      pendingDeleteCallback = callback;
-      document.getElementById('deleteConfirmModal').classList.remove('hidden');
-    }
-
-    function closeDeleteConfirmModal() {
-      pendingDeleteCallback = null;
-      document.getElementById('deleteConfirmModal').classList.add('hidden');
-    }
-
-    function loadData() {
-      try {
-        const savedSalt = localStorage.getItem('india_admin_salt');
-        const savedHash = localStorage.getItem('india_admin_pw_hash');
-        if (savedSalt) state.adminSalt = savedSalt;
-        if (savedHash) state.adminPasswordHash = savedHash;
-
-        const savedReqs = localStorage.getItem('india_prayer_requests');
-        if (savedReqs) state.prayerRequests = JSON.parse(savedReqs);
-
-        const savedUsers = localStorage.getItem('india_prayer_participants');
-        if (savedUsers) state.participants = JSON.parse(savedUsers);
-
-        if (sessionStorage.getItem('india_admin_session') === 'true') {
-          state.isAdminLogged = true;
-        }
-
-        const cloudUrl = localStorage.getItem('india_cloud_db_url');
-        const cloudKey = localStorage.getItem('india_cloud_db_key');
-        if (cloudUrl && document.getElementById('cloudDbUrl')) {
-          document.getElementById('cloudDbUrl').value = cloudUrl;
-        }
-        if (cloudKey && document.getElementById('cloudDbKey')) {
-          document.getElementById('cloudDbKey').value = cloudKey;
-        }
-      } catch (e) {}
-    }
-
-    function saveData() {
-      try {
-        localStorage.setItem('india_admin_salt', state.adminSalt);
-        localStorage.setItem('india_admin_pw_hash', state.adminPasswordHash);
-        localStorage.setItem('india_prayer_requests', JSON.stringify(state.prayerRequests));
-        localStorage.setItem('india_prayer_participants', JSON.stringify(state.participants));
-        if (syncChannel) {
-          syncChannel.postMessage({ type: 'DATA_UPDATED_BY_ADMIN' });
-        }
-      } catch (e) {}
-    }
-
-    function updateMetrics() {
-      const totalReq = state.prayerRequests.length;
-      const pending = state.prayerRequests.filter(r => r.status === 'Pending' || r.status === 'pending').length;
-      const inPrayer = state.prayerRequests.filter(r => r.status === 'In Prayer' || r.status === 'in_prayer').length;
-      const answered = state.prayerRequests.filter(r => r.status === 'Answered' || r.status === 'answered').length;
-      const totalUsers = state.participants.length;
-
-      document.getElementById('kpiTotalReq').textContent = totalReq;
-      document.getElementById('kpiPendingCount').textContent = `${pending} pending`;
-      document.getElementById('kpiInPrayerCount').textContent = inPrayer;
-      document.getElementById('kpiAnsweredCount').textContent = `${answered} answered`;
-      document.getElementById('kpiTotalUsers').textContent = totalUsers;
-
-      document.getElementById('badgeReqCount').textContent = totalReq;
-      document.getElementById('badgeUserCount').textContent = totalUsers;
-    }
-
-    function renderRequests() {
-      const container = document.getElementById('requestsListContainer');
-      let filtered = [...state.prayerRequests];
-
-      if (state.reqStatusFilter !== 'all') {
-        filtered = filtered.filter(r => (r.status || '').toLowerCase() === state.reqStatusFilter.toLowerCase());
-      }
-
-      if (state.reqCategoryFilter !== 'all') {
-        filtered = filtered.filter(r => (typeof r.category === 'string' ? r.category : (r.category && r.category.en) || '').includes(state.reqCategoryFilter));
-      }
-
-      if (state.reqSearchQuery) {
-        const q = state.reqSearchQuery.toLowerCase();
-        filtered = filtered.filter(r => {
-          const hay = `${r.name || ''} ${r.mobile || ''} ${JSON.stringify(r.location || '')} ${JSON.stringify(r.category || '')} ${JSON.stringify(r.details || '')}`.toLowerCase();
-          return hay.includes(q);
-        });
-      }
-
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-2">
-            <span class="text-3xl">🕊️</span>
-            <h4 class="text-sm font-bold text-slate-300">പ്രാർത്ഥനാ അപേക്ഷകൾ ലഭ്യമല്ല</h4>
-            <p class="text-xs text-slate-500">ഈ ഫിൽട്ടറിന് അനുയോജ്യമായ അപേക്ഷകൾ ഒന്നും കണ്ടെത്തിയില്ല.</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = filtered.map(r => {
-        const statusColors = {
-          'pending': 'bg-rose-500/20 text-rose-300 border-rose-500/40',
-          'in_prayer': 'bg-amber-500/20 text-amber-300 border-amber-500/40',
-          'answered': 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-        };
-        const sKey = (r.status || 'pending').toLowerCase().replace(' ', '_');
-        const cleanMobile = (r.mobile || '').replace(/[^0-9]/g, '');
-        const waLink = cleanMobile ? `https://wa.me/91${cleanMobile.slice(-10)}` : '#';
-
-        const loc = typeof r.location === 'object' ? (r.location.ml || r.location.en) : r.location;
-        const cat = typeof r.category === 'object' ? (r.category.ml || r.category.en) : r.category;
-        const det = typeof r.details === 'object' ? (r.details.ml || r.details.hi || r.details.en) : r.details;
-
-        return `
-          <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 sm:p-5 space-y-3.5 transition">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 font-extrabold flex items-center justify-center text-sm">
-                  ${escapeHtml((r.name || 'P')[0].toUpperCase())}
-                </div>
-                <div>
-                  <h4 class="font-bold text-sm sm:text-base text-white">${escapeHtml(r.name)}</h4>
-                  <div class="flex flex-wrap items-center gap-2 text-xs text-slate-400 mt-0.5">
-                    <span>📍 ${escapeHtml(loc || 'India')}</span>
-                    <span>•</span>
-                    <span>📅 ${escapeHtml(r.date || 'Recently')}</span>
-                    ${r.private ? '<span class="px-2 py-0.2 rounded-md bg-rose-500/20 text-rose-300 text-[10px] font-bold">🔒 Private</span>' : ''}
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-700">${escapeHtml(cat || 'General')}</span>
-                <span class="px-2.5 py-0.5 rounded-full border text-xs font-bold ${statusColors[sKey] || statusColors.pending}">${escapeHtml(r.status || 'Pending')}</span>
-              </div>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
-              ${escapeHtml(det)}
-            </div>
-
-            <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-              <div class="flex items-center gap-2">
-                <span class="text-xs text-slate-400 font-mono">📞 ${escapeHtml(r.mobile || '—')}</span>
-                ${cleanMobile ? `
-                  <a href="${waLink}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1 transition">
-                    <span>💬 WhatsApp</span>
-                  </a>
-                  <a href="tel:${cleanMobile}" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1 transition">
-                    <span>📞 Call</span>
-                  </a>
-                ` : ''}
-              </div>
-
-              <div class="flex items-center gap-1.5">
-                <button type="button" data-action="set_pending" data-id="${escapeHtml(r.id)}" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition ${sKey === 'pending' ? 'bg-rose-500 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}">
-                  പുതിയത്
-                </button>
-                <button type="button" data-action="set_in_prayer" data-id="${escapeHtml(r.id)}" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition ${sKey === 'in_prayer' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-800 text-slate-400 hover:text-white'}">
-                  പ്രാർത്ഥനയിൽ
-                </button>
-                <button type="button" data-action="set_answered" data-id="${escapeHtml(r.id)}" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition ${sKey === 'answered' ? 'bg-emerald-500 text-slate-950 font-bold' : 'bg-slate-800 text-slate-400 hover:text-white'}">
-                  ഉത്തരം ലഭിച്ചു
-                </button>
-                <button type="button" data-action="delete_req" data-id="${escapeHtml(r.id)}" class="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 transition" title="Delete">
-                  🗑️
-                </button>
-              </div>
-            </div>
-
-            <div class="pt-2 border-t border-slate-800 flex items-center gap-2">
-              <input 
-                type="text" 
-                data-note-id="${escapeHtml(r.id)}" 
-                value="${escapeHtml(r.notes || '')}" 
-                placeholder="അഡ്മിൻ കുറിപ്പ് ചേർക്കുക (e.g. ഫോണിൽ വിളിച്ചു സംസാരിച്ചു)..." 
-                class="flex-1 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-amber-500" 
-              />
-              <button type="button" data-action="save_note" data-id="${escapeHtml(r.id)}" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
-                Save
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      container.querySelectorAll('[data-action]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const action = btn.getAttribute('data-action');
-          const id = btn.getAttribute('data-id');
-          const req = state.prayerRequests.find(item => item.id === id);
-          if (!req) return;
-
-          if (action === 'set_pending') {
-            req.status = 'Pending';
-            saveData();
-            updateMetrics();
-            renderRequests();
-            showToast('Marked as Pending');
-          } else if (action === 'set_in_prayer') {
-            req.status = 'In Prayer';
-            saveData();
-            updateMetrics();
-            renderRequests();
-            showToast('Marked as In Prayer');
-          } else if (action === 'set_answered') {
-            req.status = 'Answered';
-            saveData();
-            updateMetrics();
-            renderRequests();
-            showToast('Marked as Answered Praise!');
-          } else if (action === 'delete_req') {
-            openDeleteConfirmModal('ഈ പ്രാർത്ഥനാ അപേക്ഷ തീർച്ചയായും ഒഴിവാക്കണമോ?', () => {
-              state.prayerRequests = state.prayerRequests.filter(item => item.id !== id);
-              saveData();
-              updateMetrics();
-              renderRequests();
-              showToast('അപേക്ഷ ഒഴിവാക്കി (Request deleted)');
-            });
-          } else if (action === 'save_note') {
-            const inp = container.querySelector(`[data-note-id="${id}"]`);
-            if (inp) {
-              req.notes = inp.value.trim();
-              saveData();
-              showToast('Pastoral note saved');
-            }
-          }
-        });
+      return String(str).replace(/[&<>"']/g, function(m) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m];
       });
     }
 
-    function renderUsers() {
-      const container = document.getElementById('usersListContainer');
-      let filtered = [...state.participants];
+    window.addEventListener('DOMContentLoaded', () => {
+      // Initialize language (strictly English default)
+      const savedLang = (window.PrayerSync && PrayerSync.getLang) ? PrayerSync.getLang() : 'en';
+      setAdminLang(savedLang || 'en');
 
-      if (state.userSearchQuery) {
-        const q = state.userSearchQuery.toLowerCase();
-        filtered = filtered.filter(u => `${u.name || ''} ${u.mobile || ''} ${u.location || ''}`.toLowerCase().includes(q));
-      }
+      checkLockout();
 
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="col-span-full bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-500 text-xs">
-            പങ്കാളികൾ ലഭ്യമല്ല.
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = filtered.map(u => {
-        const cleanMobile = (u.mobile || '').replace(/[^0-9]/g, '');
-        const waLink = cleanMobile ? `https://wa.me/91${cleanMobile.slice(-10)}` : '#';
-
-        return `
-          <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 space-y-3 transition flex flex-col justify-between">
-            <div class="space-y-2">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2.5">
-                  <div class="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 font-extrabold flex items-center justify-center text-sm">
-                    ${escapeHtml((u.name || 'P')[0].toUpperCase())}
-                  </div>
-                  <div>
-                    <h4 class="font-bold text-sm text-white">${escapeHtml(u.name)}</h4>
-                    <p class="text-xs text-slate-400 font-mono">${escapeHtml(u.mobile || '—')}</p>
-                  </div>
-                </div>
-                <span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-bold">
-                  🔑 Password Set
-                </span>
-              </div>
-              <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-1">
-                <div class="flex justify-between text-slate-300">
-                  <span>📍 സ്ഥലം:</span>
-                  <span class="font-semibold text-white">${escapeHtml(u.location || 'India')}</span>
-                </div>
-                <div class="flex justify-between text-slate-300">
-                  <span>⏰ വാച്ച് സമയം:</span>
-                  <span class="font-semibold text-amber-300">${escapeHtml(u.slot || 'Daily')}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-800">
-              <div class="flex items-center gap-1.5">
-                ${cleanMobile ? `
-                  <a href="${waLink}" target="_blank" class="p-1.5 rounded-lg bg-emerald-600/20 text-emerald-300 text-xs font-semibold">💬 WhatsApp</a>
-                  <a href="tel:${cleanMobile}" class="p-1.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold">📞 Call</a>
-                ` : ''}
-              </div>
-              <button type="button" data-del-mobile="${escapeHtml(u.mobile)}" class="del-user-btn text-xs text-slate-500 hover:text-rose-400 transition">
-                നീക്കം ചെയ്യുക 🗑️
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      container.querySelectorAll('.del-user-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const mob = btn.getAttribute('data-del-mobile');
-          openDeleteConfirmModal(`ഈ പങ്കാളിയെ ഒഴിവാക്കണമോ? (${mob})`, () => {
-            state.participants = state.participants.filter(item => item.mobile !== mob);
-            saveData();
-            updateMetrics();
-            renderUsers();
-            showToast('പങ്കാളിയെ നീക്കം ചെയ്തു');
-          });
-        });
-      });
-    }
-
-    // CSV Exporters
-    function exportRequestsCsv() {
-      if (state.prayerRequests.length === 0) {
-        showToast('പ്രാർത്ഥനാ അപേക്ഷകൾ ലഭ്യമല്ല.', '⚠️');
-        return;
-      }
-      const headers = ['ID', 'Date', 'Name', 'Mobile', 'Location', 'Category', 'Status', 'Details', 'Notes'];
-      const rows = state.prayerRequests.map(r => [
-        r.id || '',
-        r.date || '',
-        `"${(r.name || '').replace(/"/g, '""')}"`,
-        `"${(r.mobile || '').replace(/"/g, '""')}"`,
-        `"${(typeof r.location === 'object' ? (r.location.en || '') : (r.location || '')).replace(/"/g, '""')}"`,
-        `"${(typeof r.category === 'object' ? (r.category.en || '') : (r.category || '')).replace(/"/g, '""')}"`,
-        r.status || 'Pending',
-        `"${(typeof r.details === 'object' ? (r.details.en || r.details.hi || r.details.ml || '') : (r.details || '')).replace(/"/g, '""')}"`,
-        `"${(r.notes || '').replace(/"/g, '""')}"`
-      ]);
-      const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-      downloadBlob(csvContent, 'text/csv;charset=utf-8;', 'india_prayer_requests.csv');
-      showToast('Prayer Requests CSV ഡൗൺലോഡ് ചെയ്തു');
-    }
-
-    function exportUsersCsv() {
-      if (state.participants.length === 0) {
-        showToast('പങ്കാളികൾ ലഭ്യമല്ല.', '⚠️');
-        return;
-      }
-      const headers = ['Name', 'Mobile', 'Language', 'Location', 'Watch_Slot', 'Registered_At'];
-      const rows = state.participants.map(u => [
-        `"${(u.name || '').replace(/"/g, '""')}"`,
-        `"${(u.mobile || '').replace(/"/g, '""')}"`,
-        u.lang || 'ml',
-        `"${(u.location || '').replace(/"/g, '""')}"`,
-        `"${(u.slot || '').replace(/"/g, '""')}"`,
-        u.registeredAt || u.date || ''
-      ]);
-      const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-      downloadBlob(csvContent, 'text/csv;charset=utf-8;', 'india_prayer_participants.csv');
-      showToast('Prayer Partners CSV ഡൗൺലോഡ് ചെയ്തു');
-    }
-
-    function downloadBlob(content, mimeType, filename) {
-      const blob = new Blob([content], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    function switchSubTab(tabName) {
-      state.activeSubTab = tabName;
-      document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-        if (btn.getAttribute('data-subtab') === tabName) {
-          btn.className = 'admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 bg-amber-500 text-slate-950 shadow-md';
-        } else {
-          btn.className = 'admin-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800';
-        }
-      });
-
-      document.querySelectorAll('.admin-panel').forEach(p => p.classList.add('hidden'));
-
-      if (tabName === 'requests') {
-        document.getElementById('panelRequests').classList.remove('hidden');
-        renderRequests();
-      } else if (tabName === 'users') {
-        document.getElementById('panelUsers').classList.remove('hidden');
-        renderUsers();
-      } else if (tabName === 'password') {
-        document.getElementById('panelPassword').classList.remove('hidden');
-      } else if (tabName === 'backup') {
-        document.getElementById('panelBackup').classList.remove('hidden');
-      }
-    }
-
-    // Toggle PW
-    document.getElementById('toggleAdminPwBtn').addEventListener('click', () => {
-      const inp = document.getElementById('adminPasswordInput');
-      inp.type = inp.type === 'password' ? 'text' : 'password';
-    });
-
-    // Admin Login form
-    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (Date.now() < state.lockedUntil) {
-        showToast('താൽക്കാലികമായി ലോക്ക് ചെയ്തിരിക്കുന്നു. ദയവായി കുറച്ചുസമയം കാത്തിരിക്കുക.', '⚠️');
-        return;
-      }
-
-      const pw = document.getElementById('adminPasswordInput').value;
-      const enteredHash = await hashPassword(pw, state.adminSalt);
-
-      if (enteredHash === state.adminPasswordHash) {
-        state.isAdminLogged = true;
-        state.failedAttempts = 0;
-        sessionStorage.setItem('india_admin_session', 'true');
-        document.getElementById('adminLoginScreen').classList.add('hidden');
-        document.getElementById('adminPortalContainer').classList.remove('hidden');
-        updateMetrics();
-        renderRequests();
-        renderUsers();
-        showToast('അഡ്മിൻ പാനലിലേക്ക് സ്വാഗതം!', '🔓');
-      } else {
-        state.failedAttempts++;
-        if (state.failedAttempts >= 5) {
-          state.lockedUntil = Date.now() + 60000;
-          document.getElementById('lockoutTimer').classList.remove('hidden');
-          showToast('5 തവണ തെറ്റായ പാസ്‌വേഡ് നൽകി! 60 സെക്കൻഡ് ലോക്ക്ഔട്ട്.', '⚠️');
-        } else {
-          document.getElementById('adminLoginError').classList.remove('hidden');
+      if (window.PrayerSync && PrayerSync.getAdminSession) {
+        const s = PrayerSync.getAdminSession();
+        if (s && s.username) {
+          renderAdminDashboard();
         }
       }
     });
-
-    // Logout
-    document.getElementById('lockDashboardBtn').addEventListener('click', () => {
-      state.isAdminLogged = false;
-      sessionStorage.removeItem('india_admin_session');
-      document.getElementById('adminLoginScreen').classList.remove('hidden');
-      document.getElementById('adminPortalContainer').classList.add('hidden');
-      document.getElementById('adminPasswordInput').value = '';
-    });
-
-    // Change Admin Password Form (KEY REQUIREMENT)
-    document.getElementById('changeAdminPasswordForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const curPw = document.getElementById('currentAdminPw').value;
-      const newPw = document.getElementById('newAdminPw').value;
-      const confPw = document.getElementById('confirmNewAdminPw').value;
-
-      if (newPw !== confPw) {
-        showToast('പുതിയ പാസ്‌വേഡുകൾ തമ്മിൽ വ്യത്യാസമുണ്ട്.', '⚠️');
-        return;
-      }
-
-      const curHash = await hashPassword(curPw, state.adminSalt);
-      if (curHash !== state.adminPasswordHash) {
-        showToast('ഇപ്പോഴത്തെ അഡ്മിൻ പാസ്‌വേഡ് തെറ്റാണ്.', '⚠️');
-        return;
-      }
-
-      const newSalt = 'admin_salt_' + Date.now().toString(36);
-      const newHash = await hashPassword(newPw, newSalt);
-
-      state.adminSalt = newSalt;
-      state.adminPasswordHash = newHash;
-      saveData();
-
-      document.getElementById('changeAdminPasswordForm').reset();
-      showToast('അഡ്മിൻ പാസ്‌വേഡ് വിജയകരമായി മാറ്റി!', '🔐');
-    });
-
-    // Cloud DB Config Save
-    document.getElementById('saveCloudDbBtn').addEventListener('click', () => {
-      const url = document.getElementById('cloudDbUrl').value.trim();
-      const key = document.getElementById('cloudDbKey').value.trim();
-      localStorage.setItem('india_cloud_db_url', url);
-      localStorage.setItem('india_cloud_db_key', key);
-      showToast('ക്ലൗഡ് ക്രമീകരണങ്ങൾ സേവ് ചെയ്തു!', '☁️');
-    });
-
-    // JSON Backup
-    document.getElementById('downloadJsonBackupBtn').addEventListener('click', () => {
-      const backup = {
-        app: 'India Daily Prayer Admin',
-        backupDate: new Date().toISOString(),
-        prayerRequests: state.prayerRequests,
-        participants: state.participants
-      };
-      downloadBlob(JSON.stringify(backup, null, 2), 'application/json', `india_prayer_backup_${new Date().toISOString().slice(0,10)}.json`);
-      showToast('പൂർണ്ണ ബാക്കപ്പ് ഡൗൺലോഡ് ചെയ്തു');
-    });
-
-    // JSON Restore
-    document.getElementById('restoreJsonInput').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const r = new FileReader();
-      r.onload = (event) => {
-        try {
-          const d = JSON.parse(event.target.result);
-          if (d.prayerRequests) state.prayerRequests = d.prayerRequests;
-          if (d.participants) state.participants = d.participants;
-          saveData();
-          updateMetrics();
-          renderRequests();
-          renderUsers();
-          showToast('ബാക്കപ്പ് വിജയകരമായി റീസ്റ്റോർ ചെയ്തു!');
-        } catch(err) {
-          showToast('സാധുവായ JSON ഫയൽ തിരഞ്ഞെടുക്കുക.', '⚠️');
-        }
-      };
-      r.readAsText(file);
-    });
-
-    // In-page modal controls
-    document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteConfirmModal);
-    document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
-      if (typeof pendingDeleteCallback === 'function') {
-        pendingDeleteCallback();
-      }
-      closeDeleteConfirmModal();
-    });
-
-    // Tab buttons
-    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => switchSubTab(btn.getAttribute('data-subtab')));
-    });
-
-    // Search and filter inputs
-    document.getElementById('reqSearchInput').addEventListener('input', (e) => {
-      state.reqSearchQuery = e.target.value.trim();
-      renderRequests();
-    });
-
-    document.getElementById('reqCategoryFilter').addEventListener('change', (e) => {
-      state.reqCategoryFilter = e.target.value;
-      renderRequests();
-    });
-
-    document.querySelectorAll('.req-status-pill').forEach(btn => {
-      btn.addEventListener('click', () => {
-        state.reqStatusFilter = btn.getAttribute('data-status-filter');
-        document.querySelectorAll('.req-status-pill').forEach(b => {
-          if (b === btn) {
-            b.className = 'req-status-pill px-3 py-1 rounded-lg font-bold bg-amber-500 text-slate-950';
-          } else {
-            b.className = 'req-status-pill px-3 py-1 rounded-lg font-semibold bg-slate-800 text-slate-300 hover:text-white';
-          }
-        });
-        renderRequests();
-      });
-    });
-
-    document.getElementById('userSearchInput').addEventListener('input', (e) => {
-      state.userSearchQuery = e.target.value.trim();
-      renderUsers();
-    });
-
-    document.getElementById('exportReqCsvBtn').addEventListener('click', exportRequestsCsv);
-    document.getElementById('exportUsersCsvBtn').addEventListener('click', exportUsersCsv);
-
-    // Cross-tab sync
-    if (syncChannel) {
-      syncChannel.onmessage = () => {
-        loadData();
-        updateMetrics();
-        if (state.activeSubTab === 'requests') renderRequests();
-        if (state.activeSubTab === 'users') renderUsers();
-        showToast('പുതിയ ഡാറ്റ എത്തി (Synced)', '🔔');
-      };
-    }
-
-    // Init
-    loadData();
-    if (state.isAdminLogged) {
-      document.getElementById('adminLoginScreen').classList.add('hidden');
-      document.getElementById('adminPortalContainer').classList.remove('hidden');
-      updateMetrics();
-      renderRequests();
-      renderUsers();
-    }
   </script>
 </body>
 </html>

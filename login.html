@@ -1,606 +1,496 @@
 <!DOCTYPE html>
-<html lang="ml" class="h-full bg-slate-950 text-slate-100">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>പ്രാർത്ഥനാ പങ്കാളി ലോഗിൻ & പ്രൊഫൈൽ | Intercessor Login Portal</title>
-  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <title>Intercessor Portal | Daily Prayer Book for India</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#fffbeb',
-              100: '#fef3c7',
-              500: '#f59e0b',
-              600: '#d97706',
-              900: '#78350f',
-            }
-          }
-        }
-      }
-    }
-  </script>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
   <style>
     body {
-      font-family: 'Inter', 'Noto Sans Malayalam', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', 'Noto Sans Malayalam', 'Noto Sans Devanagari', sans-serif;
     }
   </style>
 </head>
-<body class="min-h-full flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-amber-500 selection:text-slate-950">
 
   <!-- Header -->
-  <header class="bg-slate-900 border-b border-amber-500/30 sticky top-0 z-40 backdrop-blur-md">
-    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <a href="https://prayforindia.netlify.app" target="_blank" class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 font-black flex items-center justify-center text-lg shadow-md hover:scale-105 transition">
-          🇮🇳
-        </a>
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <span class="text-2xl">🙏</span>
         <div>
-          <h1 class="font-extrabold text-sm sm:text-base text-white leading-tight">
-            ഇന്ത്യാ പ്രാർത്ഥനാ പങ്കാളി പോർട്ടൽ
+          <h1 class="text-base sm:text-lg font-bold text-amber-400 group-hover:text-amber-300 transition" id="hdrTitle">
+            Intercessor Portal
           </h1>
-          <p class="text-[11px] text-amber-300">
-            Participant Login & Password Management
-          </p>
+          <p class="text-xs text-slate-400" id="hdrSub">Daily Prayer Book for India</p>
         </div>
-      </div>
+      </a>
 
-      <div class="flex items-center gap-2">
-        <!-- Language Switcher -->
-        <div class="flex bg-slate-800 rounded-xl p-0.5 border border-slate-700 text-xs">
-          <button type="button" class="lang-btn px-2.5 py-1 rounded-lg font-bold transition bg-amber-500 text-slate-950" data-lang="ml">മലയാളം</button>
-          <button type="button" class="lang-btn px-2.5 py-1 rounded-lg font-semibold text-slate-300 hover:text-white transition" data-lang="hi">हिन्दी</button>
-          <button type="button" class="lang-btn px-2.5 py-1 rounded-lg font-semibold text-slate-300 hover:text-white transition" data-lang="en">EN</button>
+      <div class="flex items-center gap-3">
+        <!-- Firebase Cloud Status Badge -->
+        <div id="fbBadge" class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[11px] text-emerald-400 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Firebase Cloud Connected</span>
         </div>
-        <a href="https://prayforindia.netlify.app" target="_blank" class="hidden sm:flex px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition items-center gap-1">
-          <span>←</span>
-          <span>Prayer Book</span>
+
+        <!-- Language Switcher -->
+        <div class="inline-flex rounded-lg bg-slate-800 p-1 border border-slate-700 text-xs font-semibold">
+          <button type="button" onclick="setAppLang('en')" id="langEn" class="px-2.5 py-1 rounded transition bg-amber-500 text-slate-950 font-bold">EN</button>
+          <button type="button" onclick="setAppLang('hi')" id="langHi" class="px-2.5 py-1 rounded transition text-slate-300 hover:text-white">हि</button>
+          <button type="button" onclick="setAppLang('ml')" id="langMl" class="px-2.5 py-1 rounded transition text-slate-300 hover:text-white">മല</button>
+        </div>
+
+        <a href="index.html" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-slate-200 transition flex items-center gap-1.5">
+          <span>📖</span>
+          <span id="backToGuideText">Prayer Guide</span>
         </a>
       </div>
     </div>
   </header>
 
   <!-- Main Container -->
-  <main class="flex-1 max-w-xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8">
 
-    <!-- 1. AUTH SCREEN (LOGGED OUT) -->
-    <div id="authCard" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
-      <div class="text-center space-y-2">
-        <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/30 text-2xl flex items-center justify-center shadow-inner">
-          👤
-        </div>
-        <h2 id="authHeading" class="text-xl sm:text-2xl font-extrabold text-white">
-          പങ്കാളി സൈൻ-ഇൻ (Sign In)
-        </h2>
-        <p id="authSubheading" class="text-xs sm:text-sm text-slate-400">
-          നിങ്ങളുടെ അക്കൗണ്ടിലേക്ക് പ്രവേശിച്ച് പാസ്‌വേഡ് മാറ്റുകയോ പുരോഗതി കാണുകയോ ചെയ്യാം.
-        </p>
-      </div>
+    <!-- Notification Toast -->
+    <div id="toastBox" class="hidden mb-6 p-4 rounded-xl text-sm font-medium border flex items-center justify-between gap-3 shadow-lg">
+      <span id="toastMsg"></span>
+      <button onclick="hideToast()" class="text-slate-400 hover:text-white text-lg">&times;</button>
+    </div>
 
-      <!-- Tab Buttons -->
-      <div class="grid grid-cols-2 p-1 bg-slate-950 rounded-2xl border border-slate-800 text-xs font-bold">
-        <button type="button" id="tabSignInBtn" class="py-2.5 rounded-xl transition bg-amber-500 text-slate-950 shadow">
-          സൈൻ-ഇൻ (Sign In)
+    <!-- VIEW 1: AUTH (Sign In / Register) -->
+    <div id="authSection" class="max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+      <!-- Tabs -->
+      <div class="grid grid-cols-2 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 mb-6 text-sm font-bold">
+        <button type="button" onclick="switchAuthTab('login')" id="tabLoginBtn" class="py-2 rounded-lg bg-amber-500 text-slate-950 transition">
+          <span id="tabLoginText">Sign In</span>
         </button>
-        <button type="button" id="tabSignUpBtn" class="py-2.5 rounded-xl transition text-slate-400 hover:text-white">
-          പുതിയ രജിസ്ട്രേഷൻ (Register)
+        <button type="button" onclick="switchAuthTab('register')" id="tabRegisterBtn" class="py-2 rounded-lg text-slate-400 hover:text-slate-200 transition">
+          <span id="tabRegisterText">Register</span>
         </button>
       </div>
 
       <!-- Sign In Form -->
-      <form id="loginForm" class="space-y-4">
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
-          <label for="loginMobile" class="block text-xs font-bold text-slate-300 mb-1">
-            മൊബൈൽ നമ്പർ (10-Digit Mobile Number)
-          </label>
-          <input 
-            type="tel" 
-            id="loginMobile" 
-            maxlength="10" 
-            required 
-            placeholder="e.g. 9847123456" 
-            class="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500" 
-          />
+          <label class="block text-xs font-bold text-slate-300 mb-1" id="lblLoginEmail">Email or Mobile Number</label>
+          <input type="text" id="loginEmail" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm" placeholder="john@example.com or phone">
         </div>
-
         <div>
-          <label for="loginPassword" class="block text-xs font-bold text-slate-300 mb-1 flex justify-between">
-            <span>പാസ്‌വേഡ് (Password)</span>
-            <span class="text-[11px] text-amber-400 font-normal">Default: <strong class="font-mono">Pray@123</strong></span>
-          </label>
-          <div class="relative">
-            <input 
-              type="password" 
-              id="loginPassword" 
-              required 
-              placeholder="••••••••" 
-              class="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500 pr-10" 
-            />
-            <button type="button" id="toggleLoginPwBtn" class="absolute inset-y-0 right-3 flex items-center text-slate-500 hover:text-slate-300 text-sm">
-              👁️
-            </button>
-          </div>
+          <label class="block text-xs font-bold text-slate-300 mb-1" id="lblLoginPass">Password</label>
+          <input type="password" id="loginPass" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm" placeholder="••••••••">
         </div>
-
-        <button 
-          type="submit" 
-          class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2"
-        >
-          <span>ലോഗിൻ ചെയ്യുക (Sign In)</span>
-          <span>→</span>
+        <button type="submit" id="btnSubmitLogin" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-sm shadow transition">
+          Sign In as Intercessor
         </button>
       </form>
 
-      <!-- Sign Up Form -->
-      <form id="registerForm" class="hidden space-y-3.5">
+      <!-- Register Form -->
+      <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4 hidden">
         <div>
-          <label for="regName" class="block text-xs font-bold text-slate-300 mb-1">
-            പൂർണ്ണമായ പേര് (Full Name) *
-          </label>
-          <input type="text" id="regName" required placeholder="e.g. Samuel Joseph" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500" />
+          <label class="block text-xs font-bold text-slate-300 mb-1" id="lblRegName">Full Name</label>
+          <input type="text" id="regName" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm" placeholder="Pastor / Brother / Sister Name">
         </div>
-
         <div>
-          <label for="regMobile" class="block text-xs font-bold text-slate-300 mb-1">
-            മൊബൈൽ നമ്പർ (Mobile Number) *
-          </label>
-          <input type="tel" id="regMobile" maxlength="10" required placeholder="10-digit number" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500" />
+          <label class="block text-xs font-bold text-slate-300 mb-1" id="lblRegEmail">Email or Mobile Number</label>
+          <input type="text" id="regEmail" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm" placeholder="john@example.com">
         </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label for="regLocation" class="block text-xs font-bold text-slate-300 mb-1">
-              സ്ഥലം / ജില്ല (Place)
-            </label>
-            <input type="text" id="regLocation" placeholder="e.g. Kottayam" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-500" />
-          </div>
-          <div>
-            <label for="regSlot" class="block text-xs font-bold text-slate-300 mb-1">
-              പ്രാർത്ഥനാ സമയം
-            </label>
-            <select id="regSlot" class="w-full px-2.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
-              <option value="Morning">Morning (രാവിലെ)</option>
-              <option value="Afternoon">Afternoon (ഉച്ചയ്ക്ക്)</option>
-              <option value="Evening">Evening (വൈകിട്ട്)</option>
-              <option value="Night">Night (രാത്രി)</option>
-            </select>
-          </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1" id="lblRegState">State / Region</label>
+          <select id="regState" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400 text-sm">
+            <option value="Kerala">Kerala</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Bihar">Bihar</option>
+            <option value="West Bengal">West Bengal</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Chhattisgarh">Chhattisgarh</option>
+            <option value="Other">Other / International</option>
+          </select>
         </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label for="regPassword" class="block text-xs font-bold text-slate-300 mb-1">
-              പാസ്‌വേഡ് (Password) *
-            </label>
-            <input type="password" id="regPassword" minlength="6" required placeholder="Min 6 chars" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-500" />
-          </div>
-          <div>
-            <label for="regConfirmPassword" class="block text-xs font-bold text-slate-300 mb-1">
-              പാസ്‌വേഡ് വീണ്ടും *
-            </label>
-            <input type="password" id="regConfirmPassword" minlength="6" required placeholder="Confirm Password" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-500" />
-          </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1" id="lblRegCommitment">Prayer Commitment</label>
+          <select id="regCommitment" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 focus:outline-none focus:border-amber-400 text-sm">
+            <option value="Daily 31 Days">Daily Intercession (All 31 Days)</option>
+            <option value="Weekly">Weekly Intercessor</option>
+            <option value="Missions & Persecuted">Missions & Persecuted Church Focus</option>
+            <option value="National Leadership">National Leadership Focus</option>
+          </select>
         </div>
-
-        <button 
-          type="submit" 
-          class="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold text-sm shadow transition mt-2"
-        >
-          രജിസ്റ്റർ ചെയ്യുക (Register Account)
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1" id="lblRegPass">Create Password</label>
+          <input type="password" id="regPass" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm" placeholder="••••••••">
+        </div>
+        <button type="submit" id="btnSubmitReg" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-sm shadow transition">
+          Register & Connect to Cloud
         </button>
       </form>
     </div>
 
-
-    <!-- 2. PARTICIPANT DASHBOARD & CHANGE PASSWORD (LOGGED IN) -->
-    <div id="profileDashboard" class="hidden space-y-5">
-      <!-- Profile Welcome Card -->
-      <div class="bg-slate-900 border border-amber-500/30 rounded-3xl p-6 shadow-2xl relative overflow-hidden space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl bg-amber-500 text-slate-950 font-black text-xl flex items-center justify-center shadow">
-              <span id="dashAvatar">J</span>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <h3 id="dashName" class="font-extrabold text-lg text-white"></h3>
-                <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">
-                  Verified Intercessor
-                </span>
-              </div>
-              <p id="dashMobile" class="text-xs text-slate-400 font-mono"></p>
-            </div>
+    <!-- VIEW 2: DASHBOARD (When Signed In) -->
+    <div id="dashboardSection" class="hidden space-y-6">
+      <!-- Profile Header Card -->
+      <div class="bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 shadow-xl">
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-3xl text-amber-400">
+            👤
           </div>
-          <button type="button" id="dashLogoutBtn" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-300 text-xs font-bold transition border border-slate-700">
-            ലോഗ് ഔട്ട് (Logout)
-          </button>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-xl sm:text-2xl font-bold text-white" id="dashUserName">Participant Name</h2>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold">Active Intercessor</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1" id="dashUserMeta">India • Daily 31 Days Commitment</p>
+          </div>
         </div>
 
-        <!-- Details Grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-            <span class="text-slate-500">📍 സ്ഥലം (Location):</span>
-            <div id="dashLocation" class="font-semibold text-white truncate">India</div>
-          </div>
-          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-            <span class="text-slate-500">⏰ പ്രാർത്ഥനാ സമയം:</span>
-            <div id="dashSlot" class="font-semibold text-amber-300">Daily Watch</div>
-          </div>
-          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1 col-span-2 sm:col-span-1">
-            <span class="text-slate-500">📖 പ്രാർത്ഥനാ പുരോഗതി:</span>
-            <div id="dashProgress" class="font-semibold text-emerald-400">Active</div>
-          </div>
+        <div class="flex items-center gap-2.5">
+          <button onclick="handleLogout()" id="dashLogoutBtnText" class="px-4 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-xs font-bold transition">
+            Sign Out
+          </button>
         </div>
       </div>
 
-      <!-- CHANGE PASSWORD CARD (KEY USER REQUEST) -->
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
-        <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3">
-          <span class="text-xl">🔑</span>
-          <div>
-            <h4 class="font-extrabold text-sm sm:text-base text-white">
-              പാസ്‌വേഡ് മാറ്റുക (Change Your Password Online)
-            </h4>
-            <p class="text-xs text-slate-400">
-              നിങ്ങളുടെ അക്കൗണ്ട് സുരക്ഷിതമാക്കാൻ പുതിയ പാസ്‌വേഡ് നൽകുക.
-            </p>
-          </div>
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="text-xs text-slate-400 font-medium" id="statLblDays">Days Prayed</div>
+          <div class="text-2xl font-extrabold text-amber-400 mt-1" id="statPrayedDays">0 / 31</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">31-Day Prayer Guide</div>
         </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="text-xs text-slate-400 font-medium" id="statLblIntercessions">Intercessions</div>
+          <div class="text-2xl font-extrabold text-sky-400 mt-1" id="statIntercessions">0</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">Community Prayer Wall</div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="text-xs text-slate-400 font-medium" id="statLblStreak">Commitment</div>
+          <div class="text-2xl font-extrabold text-emerald-400 mt-1" id="statCommitment">Daily</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">Prayer Frequency</div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="text-xs text-slate-400 font-medium" id="statLblJoined">Member Since</div>
+          <div class="text-2xl font-extrabold text-purple-400 mt-1" id="statJoinDate">2026</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">Firebase Synced</div>
+        </div>
+      </div>
 
-        <form id="changePasswordForm" class="space-y-3.5">
+      <!-- Quick Actions & Guide Links -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <a href="index.html" class="p-5 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 transition group flex items-start gap-4">
+          <span class="text-3xl">📖</span>
           <div>
-            <label for="oldPassword" class="block text-xs font-semibold text-slate-300 mb-1">
-              ഇപ്പോഴത്തെ പാസ്‌വേഡ് (Current Password) *
-            </label>
-            <input 
-              type="password" 
-              id="oldPassword" 
-              required 
-              placeholder="Enter current password" 
-              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500" 
-            />
+            <h3 class="font-bold text-sm text-slate-100 group-hover:text-amber-400 transition" id="cardTodayPrayerTitle">Today's Prayer Focus</h3>
+            <p class="text-xs text-slate-400 mt-1" id="cardTodayPrayerSub">Open the 31-day guide and continue intercession for today's state & leaders.</p>
           </div>
+        </a>
 
+        <a href="index.html#tabSectionRequests" class="p-5 rounded-xl bg-slate-900 border border-slate-800 hover:border-sky-500/50 transition group flex items-start gap-4">
+          <span class="text-3xl">🕊️</span>
           <div>
-            <label for="newPassword" class="block text-xs font-semibold text-slate-300 mb-1 flex justify-between">
-              <span>പുതിയ പാസ്‌വേഡ് (New Password) *</span>
-              <span id="pwStrengthLabel" class="text-[11px] font-bold text-slate-500">Min 6 characters</span>
-            </label>
-            <input 
-              type="password" 
-              id="newPassword" 
-              minlength="6" 
-              required 
-              placeholder="Enter new password" 
-              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500" 
-            />
-            <!-- Strength Bar -->
-            <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
-              <div id="pwStrengthBar" class="h-full bg-rose-500 w-0 transition-all duration-300"></div>
-            </div>
+            <h3 class="font-bold text-sm text-slate-100 group-hover:text-sky-400 transition" id="cardWallTitle">Public Prayer Wall</h3>
+            <p class="text-xs text-slate-400 mt-1" id="cardWallSub">Intercede for community requests from rural missionaries and pastors across India.</p>
           </div>
+        </a>
+      </div>
 
-          <div>
-            <label for="confirmNewPassword" class="block text-xs font-semibold text-slate-300 mb-1">
-              പുതിയ പാസ്‌വേഡ് സ്ഥിരീകരിക്കുക (Confirm New Password) *
-            </label>
-            <input 
-              type="password" 
-              id="confirmNewPassword" 
-              minlength="6" 
-              required 
-              placeholder="Re-enter new password" 
-              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500" 
-            />
-          </div>
-
-          <button 
-            type="submit" 
-            class="w-full py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow transition flex items-center justify-center gap-2"
-          >
-            <span>💾 പാസ്‌വേഡ് സേവ് ചെയ്യുക (Update Password)</span>
+      <!-- Change Password Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <h3 class="text-sm font-bold text-slate-200 mb-3" id="hdrChangePass">Change Password</h3>
+        <form onsubmit="handleChangePassword(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input type="password" id="oldPass" required placeholder="Current Password" class="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-amber-400">
+          <input type="password" id="newPass" required placeholder="New Password" class="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-amber-400">
+          <button type="submit" id="btnUpdatePass" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-amber-400 transition">
+            Update Password
           </button>
         </form>
       </div>
-
-      <!-- Quick Link to Main Site -->
-      <div class="text-center pt-2">
-        <a href="https://prayforindia.netlify.app" target="_blank" class="text-xs text-amber-400 hover:underline">
-          ← തിരികെ 31 ദിവസത്തെ പ്രാർത്ഥനാ പുസ്തകത്തിലേക്ക് (Open Prayer Book)
-        </a>
-      </div>
     </div>
-
   </main>
 
-  <!-- Toast Notification -->
-  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 hidden max-w-sm rounded-xl bg-slate-900 text-white px-4 py-3 shadow-2xl border border-amber-400/50 flex items-center gap-2.5 text-xs sm:text-sm font-medium">
-    <span id="toastIcon">✨</span>
-    <span id="toastMessage">Done!</span>
-  </div>
+  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500 mt-auto">
+    <p id="footerVerse">Daily Prayer Book for India • 1 Timothy 2:1–2</p>
+  </footer>
 
+  <!-- Scripts -->
+  <script src="prayer-sync.js"></script>
   <script>
-    // State Store
-    const state = {
-      currentUser: null,
-      lang: 'ml',
-      participants: []
+    let currentLang = 'en';
+
+    const I18N = {
+      en: {
+        hdrTitle: 'Intercessor Portal',
+        hdrSub: 'Daily Prayer Book for India',
+        backToGuide: 'Prayer Guide',
+        tabLogin: 'Sign In',
+        tabRegister: 'Register',
+        lblLoginEmail: 'Email or Mobile Number',
+        lblLoginPass: 'Password',
+        btnSubmitLogin: 'Sign In as Intercessor',
+        lblRegName: 'Full Name',
+        lblRegEmail: 'Email or Mobile Number',
+        lblRegState: 'State / Region',
+        lblRegCommitment: 'Prayer Commitment',
+        lblRegPass: 'Create Password',
+        btnSubmitReg: 'Register & Connect to Cloud',
+        daysPrayed: 'Days Prayed',
+        intercessions: 'Intercessions',
+        commitment: 'Commitment',
+        memberSince: 'Member Since',
+        todayFocus: "Today's Prayer Focus",
+        todaySub: "Open the 31-day guide and continue intercession for today's state & leaders.",
+        wallTitle: 'Public Prayer Wall',
+        wallSub: 'Intercede for community requests from rural missionaries and pastors across India.',
+        changePass: 'Change Password',
+        updatePass: 'Update Password',
+        signOut: 'Sign Out',
+        footer: 'Daily Prayer Book for India • 1 Timothy 2:1–2'
+      },
+      hi: {
+        hdrTitle: 'मध्यस्थ पोर्टल',
+        hdrSub: 'भारत के लिए दैनिक प्रार्थना पुस्तिका',
+        backToGuide: 'प्रार्थना सहायिका',
+        tabLogin: 'लॉगिन करें',
+        tabRegister: 'पंजीकरण करें',
+        lblLoginEmail: 'ईमेल या मोबाइल नंबर',
+        lblLoginPass: 'पासवर्ड',
+        btnSubmitLogin: 'मध्यस्थ के रूप में साइन इन करें',
+        lblRegName: 'पूरा नाम',
+        lblRegEmail: 'ईमेल या मोबाइल नंबर',
+        lblRegState: 'राज्य / क्षेत्र',
+        lblRegCommitment: 'प्रार्थना समर्पण',
+        lblRegPass: 'पासवर्ड बनाएँ',
+        btnSubmitReg: 'पंजीकरण करें एवं क्लाउड से जुड़ें',
+        daysPrayed: 'प्रार्थना किए गए दिन',
+        intercessions: 'प्रार्थना सहभागिता',
+        commitment: 'समर्पण',
+        memberSince: 'सदस्य बने',
+        todayFocus: 'आज का प्रार्थना विषय',
+        todaySub: '31 दिवसीय मार्गदर्शिका खोलें और आज के राज्य एवं नेतृत्व के लिए प्रार्थना करें।',
+        wallTitle: 'सार्वजनिक प्रार्थना मंच',
+        wallSub: 'भारत भर के ग्रामीण मिशनरियों और पादरियों के निवेदनों के लिए प्रार्थना करें।',
+        changePass: 'पासवर्ड बदलें',
+        updatePass: 'पासवर्ड अपडेट करें',
+        signOut: 'लॉग आउट',
+        footer: 'भारत के लिए दैनिक प्रार्थना पुस्तिका • 1 तीमुथियुस 2:1–2'
+      },
+      ml: {
+        hdrTitle: 'മധ്യസ്ഥ പോർട്ടൽ',
+        hdrSub: 'ഇന്ത്യയ്ക്കുവേണ്ടിയുള്ള അനുദിന പ്രാർത്ഥനാ പുസ്തകം',
+        backToGuide: 'പ്രാർത്ഥനാ സഹായി',
+        tabLogin: 'പ്രവേശിക്കുക',
+        tabRegister: 'രജിസ്റ്റർ ചെയ്യുക',
+        lblLoginEmail: 'ഇമെയിൽ അല്ലെങ്കിൽ മൊബൈൽ',
+        lblLoginPass: 'പാസ്‌വേഡ്',
+        btnSubmitLogin: 'മധ്യസ്ഥനായി സൈൻ ഇൻ ചെയ്യുക',
+        lblRegName: 'പൂർണ്ണനാമം',
+        lblRegEmail: 'ഇമെയിൽ അല്ലെങ്കിൽ മൊബൈൽ',
+        lblRegState: 'സംസ്ഥാനം / പ്രദേശം',
+        lblRegCommitment: 'പ്രാർത്ഥനാ സമർപ്പണം',
+        lblRegPass: 'പാസ്‌വേഡ് നിർമ്മിക്കുക',
+        btnSubmitReg: 'രജിസ്റ്റർ ചെയ്ത് ക്ലൗഡിലേക്ക് ബന്ധിപ്പിക്കുക',
+        daysPrayed: 'പ്രാർത്ഥിച്ച ദിവസങ്ങൾ',
+        intercessions: 'മധ്യസ്ഥത വഹിച്ചവ',
+        commitment: 'പ്രതിബദ്ധത',
+        memberSince: 'അംഗത്വം',
+        todayFocus: 'ഇന്നത്തെ പ്രാർത്ഥനാ വിഷയം',
+        todaySub: '31 ദിവസത്തെ സഹായി തുറന്ന് ഇന്നത്തെ സംസ്ഥാനത്തിനും നേതാക്കൾക്കുമായി മധ്യസ്ഥത വഹിക്കുക.',
+        wallTitle: 'പൊതു പ്രാർത്ഥനാ ഭിത്തി',
+        wallSub: 'ഇന്ത്യയിലെ ഗ്രാമീണ സുവിശേഷകരുടെയും സഭകളുടെയും ആവശ്യങ്ങൾക്കായി മധ്യസ്ഥത വഹിക്കുക.',
+        changePass: 'പാസ്‌വേഡ് മാറ്റുക',
+        updatePass: 'അപ്‌ഡേറ്റ് ചെയ്യുക',
+        signOut: 'പുറത്തുപോകുക',
+        footer: 'ഇന്ത്യയ്ക്കുവേണ്ടിയുള്ള അനുദിന പ്രാർത്ഥനാ പുസ്തകം • 1 തിമൊഥെയൊസ് 2:1–2'
+      }
     };
 
-    const syncChannel = window.BroadcastChannel ? new BroadcastChannel('india_prayer_sync') : null;
-
-    // Web Crypto SHA-256 with Salt
-    async function hashPassword(password, salt) {
-      if (window.crypto && window.crypto.subtle) {
-        try {
-          const enc = new TextEncoder();
-          const data = enc.encode(password + '::' + salt);
-          const buf = await crypto.subtle.digest('SHA-256', data);
-          return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-        } catch(e) {}
+    function setAppLang(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      ['en', 'hi', 'ml'].forEach(l => {
+        const btn = document.getElementById('lang' + l.charAt(0).toUpperCase() + l.slice(1));
+        if (btn) {
+          if (l === lang) {
+            btn.className = 'px-2.5 py-1 rounded transition bg-amber-500 text-slate-950 font-bold';
+          } else {
+            btn.className = 'px-2.5 py-1 rounded transition text-slate-300 hover:text-white';
+          }
+        }
+      });
+      if (window.PrayerSync && PrayerSync.setLang) {
+        PrayerSync.setLang(lang);
       }
-      // Simple fallback
-      let hash = 0;
-      const str = password + '::' + salt;
-      for (let i = 0; i < str.length; i++) {
-        hash = ((hash << 5) - hash) + str.charCodeAt(i);
-        hash |= 0;
-      }
-      return 'hash_' + Math.abs(hash).toString(16);
+      applyLangUI();
     }
 
-    function showToast(msg, icon = '✨') {
-      const toast = document.getElementById('toastNotification');
-      document.getElementById('toastMessage').textContent = msg;
-      document.getElementById('toastIcon').textContent = icon;
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 3500);
+    function applyLangUI() {
+      const d = I18N[currentLang] || I18N.en;
+      document.getElementById('hdrTitle').innerText = d.hdrTitle;
+      document.getElementById('hdrSub').innerText = d.hdrSub;
+      document.getElementById('backToGuideText').innerText = d.backToGuide;
+      document.getElementById('tabLoginText').innerText = d.tabLogin;
+      document.getElementById('tabRegisterText').innerText = d.tabRegister;
+
+      document.getElementById('lblLoginEmail').innerText = d.lblLoginEmail;
+      document.getElementById('lblLoginPass').innerText = d.lblLoginPass;
+      document.getElementById('btnSubmitLogin').innerText = d.btnSubmitLogin;
+
+      document.getElementById('lblRegName').innerText = d.lblRegName;
+      document.getElementById('lblRegEmail').innerText = d.lblRegEmail;
+      document.getElementById('lblRegState').innerText = d.lblRegState;
+      document.getElementById('lblRegCommitment').innerText = d.lblRegCommitment;
+      document.getElementById('lblRegPass').innerText = d.lblRegPass;
+      document.getElementById('btnSubmitReg').innerText = d.btnSubmitReg;
+
+      document.getElementById('statLblDays').innerText = d.daysPrayed;
+      document.getElementById('statLblIntercessions').innerText = d.intercessions;
+      document.getElementById('statLblStreak').innerText = d.commitment;
+      document.getElementById('statLblJoined').innerText = d.memberSince;
+
+      document.getElementById('cardTodayPrayerTitle').innerText = d.todayFocus;
+      document.getElementById('cardTodayPrayerSub').innerText = d.todaySub;
+      document.getElementById('cardWallTitle').innerText = d.wallTitle;
+      document.getElementById('cardWallSub').innerText = d.wallSub;
+
+      document.getElementById('hdrChangePass').innerText = d.changePass;
+      document.getElementById('btnUpdatePass').innerText = d.updatePass;
+      document.getElementById('dashLogoutBtnText').innerText = d.signOut;
+      document.getElementById('footerVerse').innerText = d.footer;
     }
 
-    function loadData() {
-      try {
-        const savedUsers = localStorage.getItem('india_prayer_participants');
-        if (savedUsers) {
-          state.participants = JSON.parse(savedUsers);
-        }
-        const sessionUser = sessionStorage.getItem('india_logged_user');
-        if (sessionUser) {
-          state.currentUser = JSON.parse(sessionUser);
-        }
-      } catch (e) {}
-    }
+    function switchAuthTab(tab) {
+      const loginTab = document.getElementById('tabLoginBtn');
+      const regTab = document.getElementById('tabRegisterBtn');
+      const loginForm = document.getElementById('loginForm');
+      const regForm = document.getElementById('registerForm');
 
-    function saveData() {
-      try {
-        localStorage.setItem('india_prayer_participants', JSON.stringify(state.participants));
-        if (state.currentUser) {
-          sessionStorage.setItem('india_logged_user', JSON.stringify(state.currentUser));
-          localStorage.setItem('india_prayer_current_user', JSON.stringify(state.currentUser));
-        } else {
-          sessionStorage.removeItem('india_logged_user');
-          localStorage.removeItem('india_prayer_current_user');
-        }
-        if (syncChannel) {
-          syncChannel.postMessage({ type: 'PARTICIPANTS_UPDATED' });
-        }
-      } catch(e) {}
-    }
-
-    function renderView() {
-      const authCard = document.getElementById('authCard');
-      const profileDash = document.getElementById('profileDashboard');
-
-      if (state.currentUser) {
-        authCard.classList.add('hidden');
-        profileDash.classList.remove('hidden');
-
-        const u = state.currentUser;
-        document.getElementById('dashName').textContent = u.name;
-        document.getElementById('dashAvatar').textContent = (u.name || 'J')[0].toUpperCase();
-        document.getElementById('dashMobile').textContent = '📞 ' + u.mobile;
-        document.getElementById('dashLocation').textContent = u.location || 'India';
-        document.getElementById('dashSlot').textContent = u.slot || 'Daily';
-        
-        try {
-          const prayedDays = JSON.parse(localStorage.getItem('india_prayed_days') || '{}');
-          const count = Object.keys(prayedDays).filter(k => prayedDays[k]).length;
-          document.getElementById('dashProgress').textContent = count + ' / 31 Days';
-        } catch(e) {
-          document.getElementById('dashProgress').textContent = 'Active Intercessor';
-        }
+      if (tab === 'login') {
+        loginTab.className = 'py-2 rounded-lg bg-amber-500 text-slate-950 transition font-bold';
+        regTab.className = 'py-2 rounded-lg text-slate-400 hover:text-slate-200 transition font-bold';
+        loginForm.classList.remove('hidden');
+        regForm.classList.add('hidden');
       } else {
-        authCard.classList.remove('hidden');
-        profileDash.classList.add('hidden');
+        regTab.className = 'py-2 rounded-lg bg-amber-500 text-slate-950 transition font-bold';
+        loginTab.className = 'py-2 rounded-lg text-slate-400 hover:text-slate-200 transition font-bold';
+        regForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
       }
     }
 
-    // Password strength check
-    document.getElementById('newPassword').addEventListener('input', (e) => {
-      const val = e.target.value;
-      const bar = document.getElementById('pwStrengthBar');
-      const label = document.getElementById('pwStrengthLabel');
+    function showToast(msg, isError = false) {
+      const box = document.getElementById('toastBox');
+      const msgEl = document.getElementById('toastMsg');
+      box.className = 'mb-6 p-4 rounded-xl text-sm font-medium border flex items-center justify-between gap-3 shadow-lg ' +
+        (isError ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40');
+      msgEl.innerText = msg;
+      box.classList.remove('hidden');
+    }
 
-      if (val.length < 6) {
-        bar.className = 'h-full bg-rose-500 w-1/4 transition-all duration-300';
-        label.textContent = 'Weak';
-        label.className = 'text-[11px] font-bold text-rose-400';
-      } else if (val.length < 9) {
-        bar.className = 'h-full bg-amber-500 w-2/3 transition-all duration-300';
-        label.textContent = 'Medium';
-        label.className = 'text-[11px] font-bold text-amber-400';
-      } else {
-        bar.className = 'h-full bg-emerald-500 w-full transition-all duration-300';
-        label.textContent = 'Strong';
-        label.className = 'text-[11px] font-bold text-emerald-400';
-      }
-    });
+    function hideToast() {
+      document.getElementById('toastBox').classList.add('hidden');
+    }
 
-    // Toggle password view
-    document.getElementById('toggleLoginPwBtn').addEventListener('click', () => {
-      const inp = document.getElementById('loginPassword');
-      inp.type = inp.type === 'password' ? 'text' : 'password';
-    });
+    function renderDashboard(user) {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('dashboardSection').classList.remove('hidden');
+      document.getElementById('dashUserName').innerText = user.fullName || user.name || user.username || user.email;
+      document.getElementById('dashUserMeta').innerText = (user.stateRegion || user.state || 'India') + ' • ' + (user.commitment || 'Daily 31 Days');
 
-    // Sign in form
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      const prayedDays = (window.PrayerSync && PrayerSync.getPrayedDays) ? PrayerSync.getPrayedDays() : [];
+      document.getElementById('statPrayedDays').innerText = prayedDays.length + ' / 31';
+
+      const prayedMap = (window.PrayerSync && PrayerSync.STORAGE_KEYS) ? (function(){
+        try { return Object.keys(JSON.parse(localStorage.getItem(PrayerSync.STORAGE_KEYS.PRAYED_REQ_IDS) || '{}')).length; } catch(e){ return 0; }
+      })() : 0;
+      document.getElementById('statIntercessions').innerText = prayedMap;
+
+      document.getElementById('statCommitment').innerText = user.commitment ? user.commitment.split(' ')[0] : 'Daily';
+      document.getElementById('statJoinDate').innerText = (user.createdAt ? new Date(user.createdAt).getFullYear() : 2026);
+    }
+
+    async function handleLogin(e) {
       e.preventDefault();
-      const mobile = document.getElementById('loginMobile').value.trim();
-      const password = document.getElementById('loginPassword').value;
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPass').value.trim();
 
-      let user = state.participants.find(p => p.mobile === mobile);
-      if (!user) {
-        showToast('ഈ നമ്പറിൽ രജിസ്ട്രേഷൻ കണ്ടെത്തിയില്ല. ദയവായി രജിസ്റ്റർ ചെയ്യുക.', '⚠️');
-        return;
+      if (window.PrayerSync && PrayerSync.loginParticipant) {
+        showToast('Connecting to Firebase and verifying credentials...');
+        const res = await PrayerSync.loginParticipant(email, pass);
+        if (res.ok) {
+          showToast('Welcome, ' + (res.participant.fullName || res.participant.name || res.participant.username) + '!');
+          renderDashboard(res.participant);
+        } else {
+          showToast((res.errorTrilingual ? (res.errorTrilingual[currentLang] || res.errorTrilingual.en) : res.error) || 'Invalid email or password', true);
+        }
       }
+    }
 
-      const salt = user.salt || 'salt_default';
-      const enteredHash = await hashPassword(password, salt);
-
-      // Check password (allow default Pray@123 if hash matches or if not set)
-      if (user.passwordHash && user.passwordHash !== enteredHash) {
-        showToast('തെറ്റായ പാസ്‌വേഡ്! ദയവായി ശരിയായ പാസ്‌വേഡ് നൽകുക.', '⚠️');
-        return;
-      }
-
-      state.currentUser = user;
-      saveData();
-      renderView();
-      showToast(`സ്വാഗതം, ${user.name}! വിജയകരമായി ലോഗിൻ ചെയ്തു.`, '👋');
-    });
-
-    // Register form
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    async function handleRegister(e) {
       e.preventDefault();
       const name = document.getElementById('regName').value.trim();
-      const mobile = document.getElementById('regMobile').value.trim();
-      const location = document.getElementById('regLocation').value.trim() || 'India';
-      const slot = document.getElementById('regSlot').value;
-      const p1 = document.getElementById('regPassword').value;
-      const p2 = document.getElementById('regConfirmPassword').value;
+      const email = document.getElementById('regEmail').value.trim();
+      const state = document.getElementById('regState').value;
+      const commitment = document.getElementById('regCommitment').value;
+      const pass = document.getElementById('regPass').value.trim();
 
-      if (p1 !== p2) {
-        showToast('പാസ്‌വേഡുകൾ തമ്മിൽ വ്യത്യാസമുണ്ട്.', '⚠️');
-        return;
+      if (window.PrayerSync && PrayerSync.registerParticipant) {
+        showToast('Registering on Firebase Cloud...');
+        const res = await PrayerSync.registerParticipant({ fullName: name, username: email, email: email, stateRegion: state, commitment: commitment, password: pass });
+        if (res.ok) {
+          showToast('Registered successfully on Firebase Cloud! Welcome.');
+          renderDashboard(res.participant);
+        } else {
+          showToast((res.errorTrilingual ? (res.errorTrilingual[currentLang] || res.errorTrilingual.en) : res.error) || 'Registration failed', true);
+        }
       }
+    }
 
-      const salt = 'salt_' + Date.now().toString(36);
-      const passwordHash = await hashPassword(p1, salt);
-
-      const newUser = {
-        name,
-        mobile,
-        lang: state.lang,
-        location,
-        slot,
-        salt,
-        passwordHash,
-        registeredAt: new Date().toLocaleDateString()
-      };
-
-      const existingIdx = state.participants.findIndex(p => p.mobile === mobile);
-      if (existingIdx >= 0) {
-        state.participants[existingIdx] = newUser;
-      } else {
-        state.participants.unshift(newUser);
-      }
-
-      state.currentUser = newUser;
-      saveData();
-      renderView();
-      showToast(`രജിസ്ട്രേഷൻ വിജയകരമായി പൂർത്തിയായി!`, '🎉');
-    });
-
-    // Change Password form (KEY REQUIREMENT)
-    document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+    async function handleChangePassword(e) {
       e.preventDefault();
-      if (!state.currentUser) return;
+      const oldPass = document.getElementById('oldPass').value;
+      const newPass = document.getElementById('newPass').value;
 
-      const oldPw = document.getElementById('oldPassword').value;
-      const newPw = document.getElementById('newPassword').value;
-      const confirmPw = document.getElementById('confirmNewPassword').value;
-
-      if (newPw !== confirmPw) {
-        showToast('പുതിയ പാസ്‌വേഡ് നൽകിയതിൽ വ്യത്യാസമുണ്ട്.', '⚠️');
-        return;
+      if (window.PrayerSync && PrayerSync.changeParticipantPassword) {
+        showToast('Updating password in Firebase Cloud...');
+        const res = await PrayerSync.changeParticipantPassword(oldPass, newPass);
+        if (res.ok) {
+          showToast((res.messageTrilingual ? (res.messageTrilingual[currentLang] || res.messageTrilingual.en) : 'Password updated successfully on Firebase Cloud!'));
+          document.getElementById('oldPass').value = '';
+          document.getElementById('newPass').value = '';
+        } else {
+          showToast((res.errorTrilingual ? (res.errorTrilingual[currentLang] || res.errorTrilingual.en) : res.error) || 'Failed to update password', true);
+        }
       }
+    }
 
-      const user = state.currentUser;
-      const salt = user.salt || 'salt_default';
-      const oldHash = await hashPassword(oldPw, salt);
-
-      if (user.passwordHash && user.passwordHash !== oldHash) {
-        showToast('ഇപ്പോഴത്തെ പാസ്‌വേഡ് തെറ്റാണ്.', '⚠️');
-        return;
+    function handleLogout() {
+      if (window.PrayerSync && PrayerSync.logoutParticipant) {
+        PrayerSync.logoutParticipant();
       }
+      document.getElementById('dashboardSection').classList.add('hidden');
+      document.getElementById('authSection').classList.remove('hidden');
+      showToast('Signed out successfully.');
+    }
 
-      // Generate new salt and new hash
-      const newSalt = 'salt_' + Date.now().toString(36);
-      const newHash = await hashPassword(newPw, newSalt);
+    window.addEventListener('DOMContentLoaded', () => {
+      // Check saved lang or default to en
+      const savedLang = (window.PrayerSync && PrayerSync.getLang) ? PrayerSync.getLang() : 'en';
+      setAppLang(savedLang || 'en');
 
-      user.salt = newSalt;
-      user.passwordHash = newHash;
-
-      // Update in participants list
-      const idx = state.participants.findIndex(p => p.mobile === user.mobile);
-      if (idx >= 0) {
-        state.participants[idx].salt = newSalt;
-        state.participants[idx].passwordHash = newHash;
+      // Check active participant session
+      if (window.PrayerSync && PrayerSync.getParticipantSession) {
+        const session = PrayerSync.getParticipantSession();
+        if (session && (session.username || session.id)) {
+          renderDashboard(session);
+        }
       }
-
-      saveData();
-      document.getElementById('changePasswordForm').reset();
-      showToast('നിങ്ങളുടെ പാസ്‌വേഡ് വിജയകരമായി മാറ്റി!', '🔐');
     });
-
-    // Logout
-    document.getElementById('dashLogoutBtn').addEventListener('click', () => {
-      state.currentUser = null;
-      saveData();
-      renderView();
-      showToast('ലോഗ് ഔട്ട് ചെയ്തു.');
-    });
-
-    // Tab Switching in Auth
-    document.getElementById('tabSignInBtn').addEventListener('click', () => {
-      document.getElementById('loginForm').classList.remove('hidden');
-      document.getElementById('registerForm').classList.add('hidden');
-      document.getElementById('tabSignInBtn').className = 'py-2.5 rounded-xl transition bg-amber-500 text-slate-950 shadow';
-      document.getElementById('tabSignUpBtn').className = 'py-2.5 rounded-xl transition text-slate-400 hover:text-white';
-    });
-
-    document.getElementById('tabSignUpBtn').addEventListener('click', () => {
-      document.getElementById('registerForm').classList.remove('hidden');
-      document.getElementById('loginForm').classList.add('hidden');
-      document.getElementById('tabSignUpBtn').className = 'py-2.5 rounded-xl transition bg-amber-500 text-slate-950 shadow';
-      document.getElementById('tabSignInBtn').className = 'py-2.5 rounded-xl transition text-slate-400 hover:text-white';
-    });
-
-    // Language buttons
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        state.lang = btn.getAttribute('data-lang');
-        document.querySelectorAll('.lang-btn').forEach(b => {
-          if (b === btn) {
-            b.className = 'lang-btn px-2.5 py-1 rounded-lg font-bold transition bg-amber-500 text-slate-950';
-          } else {
-            b.className = 'lang-btn px-2.5 py-1 rounded-lg font-semibold text-slate-300 hover:text-white transition';
-          }
-        });
-      });
-    });
-
-    // Init
-    loadData();
-    renderView();
   </script>
 </body>
 </html>
