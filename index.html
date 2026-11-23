@@ -91,11 +91,11 @@
           <span id="headerParticipantText">Intercessor Portal</span>
         </a>
 
-        <!-- Admin Portal Link -->
-        <a href="admin.html" id="headerAdminLink" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-amber-300 text-xs sm:text-sm font-semibold transition flex items-center gap-1" title="Admin Portal">
-          <span>🔒</span>
-          <span id="headerAdminText" class="hidden md:inline">Admin</span>
-        </a>
+        <!-- Bold Header Prayer CTA Button (No Login Needed) -->
+        <button type="button" id="headerSubmitPrayerBtn" class="px-3 sm:px-4 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-md hover:shadow-amber-500/40 transition transform hover:scale-105 active:scale-95 flex items-center gap-1.5 border border-amber-300 ring-2 ring-amber-400/20 cursor-pointer" title="Send Prayer Request (No Sign-In Required)">
+          <span class="text-sm animate-pulse">🙏</span>
+          <span class="font-black tracking-tight">Send Prayer Request</span>
+        </button>
       </div>
     </div>
 
@@ -126,9 +126,9 @@
           </button>
         </div>
 
-        <button type="button" id="openPrayerModalBtn" class="shrink-0 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs whitespace-nowrap shadow transition flex items-center gap-1">
-          <span>➕</span>
-          <span id="navSubmitPrayerBtnText">Submit Prayer Request</span>
+        <button type="button" id="openPrayerModalBtn" class="shrink-0 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap shadow-lg hover:shadow-amber-500/40 transition transform hover:scale-105 active:scale-95 flex items-center gap-1.5 border border-amber-300 ring-2 ring-amber-400/30 cursor-pointer">
+          <span class="text-sm">🙏</span>
+          <span id="navSubmitPrayerBtnText">Send Prayer Request (No Sign-In)</span>
         </button>
       </div>
     </div>
@@ -196,21 +196,42 @@
             </div>
 
             <div class="flex flex-wrap gap-2 pt-1">
-              <button type="button" id="jumpTodayBtn" class="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs sm:text-sm shadow-lg transition flex items-center justify-center gap-1.5">
-                <span>🙏</span>
+              <button type="button" id="jumpTodayBtn" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold text-xs sm:text-sm shadow transition flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>📅</span>
                 <span id="jumpTodayBtnText">Jump to Today</span>
               </button>
-              <button type="button" id="heroOpenPrayerModalBtn" class="py-2.5 px-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-lg transition flex items-center gap-1.5">
-                <span>🕊️</span>
-                <span id="heroPrayerReqBtnText">Submit Prayer Request</span>
+              <button type="button" id="heroOpenPrayerModalBtn" class="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-xl hover:shadow-amber-500/50 transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-1.5 border border-amber-300 ring-2 ring-amber-400/30 cursor-pointer">
+                <span class="animate-pulse">🙏</span>
+                <span id="heroPrayerReqBtnText">Send Prayer Request</span>
               </button>
-              <button type="button" id="shareWebsiteBtn" class="py-2.5 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5">
+              <button type="button" id="shareWebsiteBtn" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-semibold text-xs sm:text-sm transition flex items-center gap-1 cursor-pointer">
                 <span>📤</span>
-                <span id="shareBtnText">Share Prayer</span>
+                <span id="shareBtnText">Share</span>
               </button>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Prominent, High-Converting Hero Banner for Submitting Prayer Requests (No Sign-In Needed) -->
+      <div class="mt-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/25 via-orange-600/30 to-amber-500/25 border-2 border-amber-400/70 shadow-2xl backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="space-y-1 text-center md:text-left">
+          <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider shadow">
+            <span>✨</span>
+            <span>Do You Need Prayer? / പ്രാർത്ഥന ആവശ്യമുണ്ടോ? / प्रार्थना चाहिए?</span>
+          </div>
+          <h3 class="text-base sm:text-xl font-black text-white">
+            Send Your Prayer Request to This Portal (100% Free)
+          </h3>
+          <p class="text-xs sm:text-sm text-amber-200 font-semibold">
+            ⚡ <span class="underline decoration-amber-400 font-extrabold text-white">NO SIGN-IN OR ACCOUNT NEEDED!</span> Anyone can submit prayer requests directly.
+            <span class="block text-xs text-slate-300 mt-0.5 font-normal">സൈൻ ഇൻ ആവശ്യമില്ല • ഏവർക്കും പ്രാർത്ഥനാ വിഷയം അയക്കാം • कोई लॉगिन आवश्यक नहीं</span>
+          </p>
+        </div>
+        <button type="button" id="heroBigCtaPrayerBtn" class="shrink-0 w-full md:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-sm sm:text-base shadow-2xl hover:shadow-amber-500/50 transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 border-2 border-amber-200 ring-4 ring-amber-500/30 cursor-pointer">
+          <span class="text-xl animate-bounce">🙏</span>
+          <span class="tracking-wide">SEND PRAYER REQUEST NOW</span>
+        </button>
       </div>
     </div>
   </section>
@@ -450,11 +471,11 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-2.5 shrink-0">
-              <button type="button" id="feedOpenPrayerModalBtn" class="px-4 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition flex items-center gap-2">
-                <span>➕</span>
-                <span id="feedSubmitBtnText">Submit Prayer Request</span>
+              <button type="button" id="feedOpenPrayerModalBtn" class="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-xl hover:shadow-amber-500/40 transition transform hover:scale-105 active:scale-95 flex items-center gap-2 border border-amber-300 ring-2 ring-amber-400/30 cursor-pointer">
+                <span class="text-base animate-pulse">🙏</span>
+                <span id="feedSubmitBtnText">Send Prayer Request (No Sign-In)</span>
               </button>
-              <a href="login.html" class="px-3.5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-amber-300 font-bold text-xs sm:text-sm transition flex items-center gap-1.5">
+              <a href="login.html" class="px-3.5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-amber-300 font-bold text-xs sm:text-sm transition flex items-center gap-1.5" title="Registered Intercessors Only">
                 <span>👤</span>
                 <span id="feedPortalLinkText">Intercessor Portal</span>
               </a>
@@ -521,128 +542,85 @@
 
   </main>
 
-  <!-- INTERACTIVE PUBLIC PRAYER REQUEST SUBMISSION MODAL (TRILINGUAL: MALAYALAM, HINDI, ENGLISH) -->
-  <div id="prayerRequestModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 overflow-y-auto no-print" role="dialog" aria-modal="true" aria-labelledby="modalHeadingTitle">
-    <div class="bg-white rounded-2xl shadow-2xl border border-amber-500/40 max-w-2xl w-full overflow-hidden my-auto">
+  <!-- STREAMLINED, FRICTIONLESS PRAYER REQUEST SUBMISSION MODAL (NO LOGIN REQUIRED) -->
+  <div id="prayerRequestModal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 overflow-y-auto no-print" role="dialog" aria-modal="true" aria-labelledby="modalHeadingTitle">
+    <div class="bg-white rounded-3xl shadow-2xl border-2 border-amber-500/50 max-w-lg w-full overflow-hidden my-auto transform transition-all">
       <!-- Modal Header -->
-      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white px-5 py-4 flex items-center justify-between border-b border-amber-500/30">
+      <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 text-white px-5 sm:px-6 py-4 flex items-center justify-between border-b border-amber-500/30">
         <div>
-          <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">
-            🙏 Submit Prayer Request
-          </span>
-          <h3 id="modalHeadingTitle" class="text-base sm:text-lg font-extrabold text-white mt-0.5">
-            Share a Prayer Request with Intercessors
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow">
+            <span>✨</span>
+            <span>No Sign-In Required • സൈൻ ഇൻ ആവശ്യമില്ല</span>
+          </div>
+          <h3 id="modalHeadingTitle" class="text-base sm:text-lg font-black text-white mt-1">
+            Send Prayer Request to Intercessors
           </h3>
+          <p class="text-xs text-amber-200/90 font-medium">
+            നിങ്ങളുടെ പ്രാർത്ഥനാ വിഷയം അയക്കുക • प्रार्थना निवेदन भेजें
+          </p>
         </div>
-        <button type="button" id="closePrayerModalBtn" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm transition" aria-label="Close modal">
+        <button type="button" id="closePrayerModalBtn" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center font-bold text-base transition cursor-pointer" aria-label="Close modal">
           ✕
         </button>
       </div>
 
-      <!-- Modal Form -->
-      <form id="prayerRequestForm" class="p-5 sm:p-6 space-y-4 max-h-[82vh] overflow-y-auto">
-        <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-950 space-y-1">
-          <div class="font-bold">🇮🇳 Trilingual Intercessory Prayer Wall (English • हिन्दी • മലയാളം)</div>
-          <div>You may write your prayer request in English, Hindi, or Malayalam. It will be shared with intercessors nationwide.</div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label for="reqNameInput" class="block text-xs font-bold text-slate-800 mb-1">
-              Your Name / Church <span class="text-rose-600">*</span>
-            </label>
-            <input type="text" id="reqNameInput" required placeholder="e.g. Bro. Thomas / Pastor Rajesh / Sister Grace" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" />
-          </div>
-          <div>
-            <label for="reqLocationInput" class="block text-xs font-bold text-slate-800 mb-1">
-              Location / State / City <span class="text-rose-600">*</span>
-            </label>
-            <input type="text" id="reqLocationInput" required placeholder="e.g. Kochi, Kerala / Varanasi, UP / New Delhi" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" />
+      <!-- Modal Form: Simple & Friendly (Avoids Confusing Options) -->
+      <form id="prayerRequestForm" class="p-5 sm:p-6 space-y-4">
+        <!-- Reassurance Banner -->
+        <div class="p-3.5 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 text-xs text-amber-950 flex items-start gap-3">
+          <span class="text-xl shrink-0">🤝</span>
+          <div class="space-y-0.5 leading-snug">
+            <p class="font-extrabold text-slate-900 text-xs sm:text-sm">100% Free & Open to Everyone</p>
+            <p class="text-slate-700">You do <span class="font-bold text-amber-950 underline">NOT</span> need to sign in or create an account. Simply write your need below; it will be placed on our national prayer wall for intercessors to pray.</p>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label for="reqCategorySelect" class="block text-xs font-bold text-slate-800 mb-1">
-              Prayer Category
-            </label>
-            <select id="reqCategorySelect" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
-              <option value="nation">🇮🇳 National Peace &amp; Welfare</option>
-              <option value="leadership">🏛️ National &amp; State Leadership</option>
-              <option value="persecution">🛡️ Persecuted Church &amp; Protection</option>
-              <option value="unreached">🌾 Unreached Regions (&lt; 0.5%)</option>
-              <option value="church">⛪ Church Ministry &amp; Pastors</option>
-              <option value="youth">🎓 Youth &amp; Families</option>
-              <option value="revival">🔥 Spiritual Revival &amp; Missions</option>
-              <option value="personal">🙏 Personal / Family Need</option>
-            </select>
-          </div>
-          <div>
-            <label for="reqStateDaySelect" class="block text-xs font-bold text-slate-800 mb-1">
-              Target State / Day (1–31)
-            </label>
-            <select id="reqStateDaySelect" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
-              <!-- Populated by JS from PrayerSync.STATES_LIST -->
-            </select>
-          </div>
-        </div>
-
+        <!-- Field 1: Name / Church -->
         <div>
-          <label for="reqTitleInput" class="block text-xs font-bold text-slate-800 mb-1">
-            Prayer Request Title <span class="text-rose-600">*</span>
+          <label for="reqNameInput" class="block text-xs font-black text-slate-800 mb-1">
+            1. Your Name or Church <span class="text-rose-600">*</span>
+            <span class="text-[11px] font-normal text-slate-500 ml-1">(നിങ്ങളുടെ പേര് / സഭ)</span>
           </label>
-          <input type="text" id="reqTitleInput" required placeholder="ഉദാ: ഉത്തരേന്ത്യയിലെ ഗ്രാമങ്ങൾക്കായി / उत्तर भारत में शांति और सुरक्षा के लिए / Prayer for Peace & Revival" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" />
+          <input type="text" id="reqNameInput" required placeholder="e.g. Sister Grace / Bro. Thomas / Pastor Rajesh" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 font-medium text-slate-900 bg-slate-50 focus:bg-white" />
         </div>
 
+        <!-- Field 2: Location / City / State -->
         <div>
-          <label for="reqContentInput" class="block text-xs font-bold text-slate-800 mb-1">
-            Prayer Details & Needs <span class="text-rose-600">*</span>
+          <label for="reqLocationInput" class="block text-xs font-black text-slate-800 mb-1">
+            2. City / State / Region <span class="text-rose-600">*</span>
+            <span class="text-[11px] font-normal text-slate-500 ml-1">(നിങ്ങളുടെ സ്ഥലം / ജില്ല)</span>
           </label>
-          <textarea id="reqContentInput" rows="3" required placeholder="നിങ്ങളുടെ പ്രാർത്ഥനാ വിഷയം ഇവിടെ രേഖപ്പെടുത്തുക... / कृपया अपना प्रार्थना निवेदन यहाँ विस्तार से लिखें... / Write your prayer request in detail..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+          <input type="text" id="reqLocationInput" required placeholder="e.g. Kochi, Kerala / Varanasi, UP / Mumbai / Delhi" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 font-medium text-slate-900 bg-slate-50 focus:bg-white" />
         </div>
 
-        <!-- Optional Custom Hindi & Malayalam Translations Box -->
-        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-800">
-              🌐 ഹിന്ദി / മലയാളം വിവർത്തനം (ഓപ്ഷണൽ) • हिन्दी एवं मलयालम अनुवाद (वैकल्पिक — स्वतः अनुवाद उपलब्ध है)
-            </span>
-            <button type="button" id="autoFillTranslationsBtn" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-[11px] transition">
-              ✨ Auto-Translate (हिन्दी / മലയാളം / EN)
-            </button>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label for="reqContentHiInput" class="block text-[11px] font-semibold text-slate-700 mb-1">
-                हिन्दी अनुवाद (Hindi Translation - Auto-filled if left blank)
-              </label>
-              <textarea id="reqContentHiInput" rows="2" placeholder="हिन्दी में प्रार्थना निवेदन (खाली छोड़ने पर स्वतः हिन्दी अनुवाद जोड़ा जाएगा)..." class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-hi focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
-            </div>
-            <div>
-              <label for="reqContentMlInput" class="block text-[11px] font-semibold text-slate-700 mb-1">
-                മലയാളം വിവർത്തനം (Malayalam - Auto-filled if left blank)
-              </label>
-              <textarea id="reqContentMlInput" rows="2" placeholder="മലയാളത്തിലുള്ള പ്രാർത്ഥനാ വിഷയം (ഒഴിച്ചിട്ടാൽ സ്വയമേവ ചേർക്കപ്പെടും)..." class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-ml focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
-            </div>
-          </div>
+        <!-- Field 3: Prayer Request Textarea -->
+        <div>
+          <label for="reqContentInput" class="block text-xs font-black text-slate-800 mb-1">
+            3. What can we pray for you? <span class="text-rose-600">*</span>
+            <span class="text-[11px] font-normal text-slate-500 ml-1">(പ്രാർത്ഥനാ വിഷയം / प्रार्थना निवेदन)</span>
+          </label>
+          <textarea id="reqContentInput" rows="4" required placeholder="Write freely in Malayalam, Hindi, or English (e.g. for healing, family peace, job, spiritual breakthrough, church, or nation)...&#10;നിങ്ങളുടെ പ്രാർത്ഥനാ വിഷയം ഇവിടെ ലളിതമായി എഴുതുക..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 font-medium text-slate-900 bg-slate-50 focus:bg-white"></textarea>
         </div>
 
-        <div class="flex items-center justify-between pt-1">
-          <label class="inline-flex items-center gap-2 cursor-pointer">
+        <!-- Simple Optional Toggle: Urgent -->
+        <div class="pt-0.5">
+          <label class="inline-flex items-center gap-2 cursor-pointer p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 transition w-full">
             <input type="checkbox" id="reqUrgentCheckbox" class="w-4 h-4 rounded text-rose-600 focus:ring-rose-500 border-slate-300" />
-            <span class="text-xs font-bold text-rose-800">
-              🚨 Mark as Urgent Prayer Request
+            <span class="text-xs font-bold text-rose-800 flex items-center gap-1.5">
+              <span>🚨</span>
+              <span>Mark as Urgent Prayer Need (അടിയന്തിര വിഷയം)</span>
             </span>
           </label>
         </div>
 
-        <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-200">
-          <button type="button" id="cancelPrayerModalBtn" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm transition">
+        <!-- Submit & Cancel Buttons -->
+        <div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-200">
+          <button type="button" id="cancelPrayerModalBtn" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm transition cursor-pointer">
             Cancel
           </button>
-          <button type="submit" id="submitPrayerFormBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition flex items-center gap-1.5">
-            <span>🙏</span>
-            <span>Submit Prayer Request</span>
+          <button type="submit" id="submitPrayerFormBtn" class="flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-xl hover:shadow-amber-500/40 transition transform hover:scale-102 active:scale-98 flex items-center justify-center gap-2 border border-amber-300 ring-2 ring-amber-400/20 cursor-pointer">
+            <span class="text-base animate-pulse">🙏</span>
+            <span>SEND PRAYER REQUEST NOW</span>
           </button>
         </div>
       </form>
@@ -666,9 +644,12 @@
         <span>Daily Prayer Book for India</span>
       </div>
       <div class="flex flex-wrap items-center gap-3">
-        <a href="login.html" class="text-emerald-400 hover:text-emerald-300 font-semibold transition">👤 Participant Portal (login.html)</a>
+        <a href="login.html" class="text-emerald-400 hover:text-emerald-300 font-semibold transition">👤 Intercessor Portal (login.html)</a>
         <span>|</span>
-        <a href="admin.html" class="text-amber-400 hover:text-amber-300 font-semibold transition">🔒 Admin Portal (admin.html)</a>
+        <button type="button" id="footerOpenPrayerModalBtn" class="text-amber-400 hover:text-amber-300 font-bold transition flex items-center gap-1 cursor-pointer">
+          <span>🙏</span>
+          <span>Send Prayer Request (No Login Needed)</span>
+        </button>
         <span>|</span>
         <button type="button" id="resetProgressBtn" class="text-slate-400 hover:text-amber-300 underline transition">
           Reset Prayer Progress
@@ -678,6 +659,19 @@
       </div>
     </div>
   </footer>
+
+  <!-- Persistent Floating Action Button (FAB) for Instant Prayer Request Submission (No Sign-In Required) -->
+  <div class="fixed bottom-6 right-4 sm:right-6 z-40 no-print flex flex-col items-end gap-1.5 pointer-events-auto">
+    <div class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/95 border border-amber-400/70 text-[11px] font-black text-amber-300 shadow-2xl backdrop-blur animate-pulse">
+      <span>🕊️</span>
+      <span>No Sign-In Required • ഏവർക്കും അയക്കാം</span>
+    </div>
+    <button type="button" id="floatingPrayerBtn" class="px-5 py-3.5 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-2xl hover:shadow-amber-500/50 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 border-2 border-amber-200 ring-4 ring-amber-500/30 cursor-pointer" title="Send Prayer Request to National Intercessors (No Sign-In Required)">
+      <span class="text-lg animate-bounce">🙏</span>
+      <span class="font-black tracking-wide">SEND PRAYER REQUEST</span>
+      <span class="hidden md:inline font-bold text-xs opacity-90 border-l border-slate-900/30 pl-2">പ്രാർത്ഥനാ വിഷയം</span>
+    </button>
+  </div>
 
   <script src="prayer-sync.js"></script>
   <script>
@@ -815,9 +809,8 @@
           lead: 'National Leadership',
           chal: 'Major Challenges',
           req: 'Prayer Requests',
-          submit: 'Submit Prayer Request',
+          submit: 'Send Prayer Request (No Login)',
           part: 'Intercessor Portal',
-          admin: 'Admin Portal',
           print: 'Print',
           lang: 'Language:'
         },
@@ -827,9 +820,8 @@
           lead: 'राष्ट्रीय नेतृत्व',
           chal: 'प्रमुख चुनौतियाँ',
           req: 'प्रार्थना निवेदन',
-          submit: 'प्रार्थना निवेदन भेजें',
+          submit: 'प्रार्थना निवेदन भेजें (बिना लॉगिन)',
           part: 'मध्यस्थ पोर्टल',
-          admin: 'एडमिन पोर्टल',
           print: 'प्रिंट',
           lang: 'भाषा:'
         },
@@ -839,9 +831,8 @@
           lead: 'ദേശീയ നേതൃത്വം',
           chal: 'പ്രധാന വെല്ലുവിളികൾ',
           req: 'പ്രാർത്ഥനാ വിഷയങ്ങൾ',
-          submit: 'പ്രാർത്ഥനാ വിഷയം സമർപ്പിക്കുക',
+          submit: 'പ്രാർത്ഥനാ വിഷയം അയക്കുക (ലളിതമായി)',
           part: 'മധ്യസ്ഥ പോർട്ടൽ',
-          admin: 'അഡ്മിൻ പോർട്ടൽ',
           print: 'പ്രിന്റ്',
           lang: 'ഭാഷ:'
         }
@@ -1829,15 +1820,25 @@
         });
       }
 
-      // Modal Open Buttons
-      ['openPrayerModalBtn', 'heroOpenPrayerModalBtn', 'feedOpenPrayerModalBtn'].forEach(btnId => {
+      // Modal Open Buttons (All Bold & Prominent CTAs across the portal)
+      [
+        'openPrayerModalBtn',
+        'heroOpenPrayerModalBtn',
+        'feedOpenPrayerModalBtn',
+        'headerSubmitPrayerBtn',
+        'heroBigCtaPrayerBtn',
+        'floatingPrayerBtn',
+        'footerOpenPrayerModalBtn'
+      ].forEach(btnId => {
         const btn = document.getElementById(btnId);
         if (btn) btn.addEventListener('click', openPrayerModal);
       });
 
       // Modal Close Buttons
-      const closeMBtn = document.getElementById('cancelPrayerModalBtn');
-      if (closeMBtn) closeMBtn.addEventListener('click', closePrayerModal);
+      ['cancelPrayerModalBtn', 'closePrayerModalBtn'].forEach(btnId => {
+        const btn = document.getElementById(btnId);
+        if (btn) btn.addEventListener('click', closePrayerModal);
+      });
 
       // Modal Backdrop Click
       const modalBackdrop = document.getElementById('prayerRequestModal');
@@ -1847,36 +1848,43 @@
         });
       }
 
-      // Modal Form Submit
+      // Streamlined Modal Form Submit (No Login Required, Frictionless)
       const prayerForm = document.querySelector('#prayerRequestModal form');
       if (prayerForm) {
         prayerForm.addEventListener('submit', async (e) => {
           e.preventDefault();
           const nameInput = document.getElementById('reqNameInput');
           const locInput = document.getElementById('reqLocationInput');
-          const catSelect = document.getElementById('reqCategorySelect');
-          const stateSelect = document.getElementById('reqStateSelect');
-          const titleInput = document.getElementById('reqTitleInput');
           const contentInput = document.getElementById('reqContentInput');
-          const contentHiInput = document.getElementById('reqContentHiInput');
-          const contentMlInput = document.getElementById('reqContentMlInput');
-          const urgentCheck = document.getElementById('reqUrgentCheck');
+          const urgentCheck = document.getElementById('reqUrgentCheckbox');
+
+          const userContent = contentInput ? contentInput.value.trim() : '';
+          const userLoc = (locInput && locInput.value.trim()) || 'India';
+          const userName = (nameInput && nameInput.value.trim()) || 'Intercessor';
+
+          // Automatically generate clean title from the user's prayer request
+          let userTitle = '';
+          if (userContent) {
+            const firstLine = userContent.split('\n')[0].trim();
+            userTitle = firstLine.length > 60 ? firstLine.slice(0, 57) + '...' : firstLine;
+          }
+          if (!userTitle) {
+            userTitle = 'Prayer Request from ' + userLoc;
+          }
 
           const payload = {
-            requesterName: nameInput ? nameInput.value : 'Intercessor',
-            location: locInput ? locInput.value : 'India',
-            category: catSelect ? catSelect.value : 'nation',
-            stateDay: stateSelect ? Number(stateSelect.value) || 0 : 0,
-            title: titleInput ? titleInput.value : '',
-            content: contentInput ? contentInput.value : '',
-            contentHi: contentHiInput ? contentHiInput.value : '',
-            contentMl: contentMlInput ? contentMlInput.value : '',
+            requesterName: userName,
+            location: userLoc,
+            category: 'personal',
+            stateDay: 0,
+            title: userTitle,
+            content: userContent,
             isUrgent: urgentCheck ? urgentCheck.checked : false
           };
 
           if (window.PrayerSync && PrayerSync.submitPrayerRequest) {
             await PrayerSync.submitPrayerRequest(payload);
-            showToast('Prayer request submitted successfully and synced to Firebase!');
+            showToast('🙏 Prayer request submitted successfully! / പ്രാർത്ഥനാ വിഷയം വിജയകരമായി സമർപ്പിച്ചു!');
             closePrayerModal();
             prayerForm.reset();
             renderPrayerFeed();
